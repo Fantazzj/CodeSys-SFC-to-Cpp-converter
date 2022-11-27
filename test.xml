@@ -1,0 +1,40 @@
+﻿<body>
+  <SFC>
+    <step localId="0" initialStep="true" name="Init">
+    </step>
+    <selectionDivergence localId="1">
+    </selectionDivergence>
+    <inVariable localId="2">
+    </inVariable>
+    <transition localId="3">
+    </transition>
+    <step localId="4" name="Step0">
+    </step>
+    <actionBlock localId="6">
+    </actionBlock>
+    <inVariable localId="7">
+    </inVariable>
+    <transition localId="8">
+    </transition>
+    <inVariable localId="9">
+    </inVariable>
+    <transition localId="10">
+    </transition>
+    <step localId="11" name="Step7">
+    </step>
+    <inVariable localId="12">
+    </inVariable>
+    <transition localId="13">
+    </transition>
+    <selectionConvergence localId="14">
+    </selectionConvergence>
+    <step localId="15" name="Step4">
+    </step>
+    <inVariable localId="16">
+    </inVariable>
+    <transition localId="17">
+    </transition>
+    <jumpStep localId="18" targetName="Init">
+    </jumpStep>
+  </SFC>
+</body>
