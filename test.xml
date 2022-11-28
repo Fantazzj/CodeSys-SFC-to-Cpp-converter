@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2022-11-27T20:18:50.3818659" />
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2022-11-29T00:24:14.4370364" />
   <contentHeader name="test.project" modificationDateTime="2022-11-27T15:41:42.738882">
     <coordinateInfo>
       <fbd>
@@ -76,6 +76,21 @@
               </type>
             </variable>
             <variable name="out0">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="trans12">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="trans13">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="trans11">
               <type>
                 <BOOL />
               </type>
@@ -311,19 +326,36 @@
                 </data>
               </addData>
             </step>
-            <inVariable localId="16">
+            <selectionDivergence localId="16">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="15" />
+              </connectionPointIn>
+              <connectionPointOut formalParameter="sfc" />
+              <connectionPointOut formalParameter="sfc" />
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                  <attributes xmlns="">
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">Branch1</attribute>
+                    <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                    <attribute guid="23bdaa98-72ec-41f7-817b-9dede5697086">FALSE</attribute>
+                  </attributes>
+                </data>
+              </addData>
+            </selectionDivergence>
+            <inVariable localId="17">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>trans10</expression>
             </inVariable>
-            <transition localId="17">
+            <transition localId="18">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="15" formalParameter="sfc" />
+                <connection refLocalId="16" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="16" />
+                  <connection refLocalId="17" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -338,10 +370,151 @@
                 </data>
               </addData>
             </transition>
-            <jumpStep localId="18" targetName="Init">
+            <step localId="19" name="Step8">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="17" />
+                <connection refLocalId="18" />
+              </connectionPointIn>
+              <connectionPointOut formalParameter="sfc" />
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                  <attributes xmlns="">
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">Step8</attribute>
+                    <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                    <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
+                    <attribute guid="6844a48e-46c2-4cc8-a185-a478f3b99cc0">FALSE</attribute>
+                    <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
+                  </attributes>
+                </data>
+              </addData>
+            </step>
+            <inVariable localId="20">
+              <position x="0" y="0" />
+              <connectionPointOut />
+              <expression>trans11</expression>
+            </inVariable>
+            <transition localId="21">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="19" formalParameter="sfc" />
+              </connectionPointIn>
+              <condition>
+                <connectionPointIn>
+                  <connection refLocalId="20" />
+                </connectionPointIn>
+              </condition>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                  <attributes xmlns="">
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">trans11</attribute>
+                    <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                    <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
+                    <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
+                    <attribute guid="8294df19-5962-4dee-a874-1051dabb0e3e">0</attribute>
+                  </attributes>
+                </data>
+              </addData>
+            </transition>
+            <inVariable localId="22">
+              <position x="0" y="0" />
+              <connectionPointOut />
+              <expression>trans12</expression>
+            </inVariable>
+            <transition localId="23">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="16" formalParameter="sfc" />
+              </connectionPointIn>
+              <condition>
+                <connectionPointIn>
+                  <connection refLocalId="22" />
+                </connectionPointIn>
+              </condition>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                  <attributes xmlns="">
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">trans12</attribute>
+                    <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                    <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
+                    <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
+                    <attribute guid="8294df19-5962-4dee-a874-1051dabb0e3e">0</attribute>
+                  </attributes>
+                </data>
+              </addData>
+            </transition>
+            <step localId="24" name="Step9">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="23" />
+              </connectionPointIn>
+              <connectionPointOut formalParameter="sfc" />
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                  <attributes xmlns="">
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">Step9</attribute>
+                    <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                    <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
+                    <attribute guid="6844a48e-46c2-4cc8-a185-a478f3b99cc0">FALSE</attribute>
+                    <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
+                  </attributes>
+                </data>
+              </addData>
+            </step>
+            <inVariable localId="25">
+              <position x="0" y="0" />
+              <connectionPointOut />
+              <expression>trans13</expression>
+            </inVariable>
+            <transition localId="26">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="24" formalParameter="sfc" />
+              </connectionPointIn>
+              <condition>
+                <connectionPointIn>
+                  <connection refLocalId="25" />
+                </connectionPointIn>
+              </condition>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                  <attributes xmlns="">
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">trans13</attribute>
+                    <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                    <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
+                    <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
+                    <attribute guid="8294df19-5962-4dee-a874-1051dabb0e3e">0</attribute>
+                  </attributes>
+                </data>
+              </addData>
+            </transition>
+            <jumpStep localId="27" targetName="Step0">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="26" />
+              </connectionPointIn>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                  <attributes xmlns="">
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">Step0</attribute>
+                    <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                  </attributes>
+                </data>
+              </addData>
+            </jumpStep>
+            <selectionConvergence localId="28">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="21" formalParameter="sfc" />
+              </connectionPointIn>
+              <connectionPointIn>
+                <connection refLocalId="27" formalParameter="sfc" />
+              </connectionPointIn>
+              <connectionPointOut />
+            </selectionConvergence>
+            <jumpStep localId="29" targetName="Init">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="28" />
               </connectionPointIn>
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
