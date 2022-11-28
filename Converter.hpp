@@ -23,7 +23,7 @@ private:
     void _indent();
 
 public:
-    Converter(char* fileIn, char* fileOut);
+    Converter(QString fileIn, QString fileOut);
     ~Converter();
     QTextStream* exec();
 };
