@@ -5,7 +5,7 @@
 #ifndef CODESYS_SFC_TO_CPP_CONVERTER_CONVERTER_HPP
 #define CODESYS_SFC_TO_CPP_CONVERTER_CONVERTER_HPP
 
-
+#include <QDebug>
 #include <QtGlobal>
 #include <QFile>
 #include <QXmlStreamReader>

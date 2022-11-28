@@ -89,8 +89,11 @@ QString Converter::_searchConvStep() {
     qint64 startLine = _xml->lineNumber();
 
     do _xml->readNext();
-    while(!(_xml->name() == QString("selectionConvergence") && _xml->tokenType() == QXmlStreamReader::StartElement));
-    _xml->readNext();
+    while(!(_xml->name() == QString("selectionConvergence") && _xml->tokenType() == QXmlStreamReader::EndElement));
+
+    do _xml->readNext();
+    while(!(_xml->name() == QString("step") && _xml->tokenType() == QXmlStreamReader::StartElement));
+
     QString name = _xml->attributes().value(QString("name")).toString().remove("Step");
 
     _xmlFile->seek(0);
