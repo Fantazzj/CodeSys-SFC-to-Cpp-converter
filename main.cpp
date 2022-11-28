@@ -13,7 +13,10 @@ int main(int argc, char* argv[]) {
     QTextStream out = QTextStream(stdout);
      */
 
-    Converter converter = Converter(argv[1], "out.txt");
+    QString outFile = QString(argv[1]);
+    outFile.replace("xml", "txt");
+
+    Converter converter = Converter(argv[1], outFile);
 
     converter.exec();
 
