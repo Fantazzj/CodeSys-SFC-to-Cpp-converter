@@ -9,72 +9,75 @@ Converter::Converter(QString fileIn, QString fileOut) {
     _xmlFile->open(QIODevice::ReadOnly | QIODevice::Text);
     _xml = new QXmlStreamReader(_xmlFile);
 
-    //_outFile = new QFile(fileOut);
-    //_outFile->open(QIODevice::WriteOnly | QIODevice::Text);
-    //_out = new QTextStream(_outFile);
-    _out = new QTextStream(stdout);
+    _outFile = new QFile(fileOut);
+    _outFile->open(QIODevice::WriteOnly | QIODevice::Text);
+    _out = new QTextStream(_outFile);
+    //_out = new QTextStream(stdout);
 }
 
 Converter::~Converter() {
     _xmlFile->close();
-    //_outFile->close();
+    _outFile->close();
 }
 
-QTextStream* Converter::exec() {
+void Converter::exec() {
     _reachSFC();
 
     while(!(_xml->name() == QString("SFC") && _xml->tokenType() == QXmlStreamReader::EndElement)) {
         _xml->readNext();
 
-        if(_xml->name() == QString("step") && _xml->tokenType() == QXmlStreamReader::StartElement) {
-            _step = _xml->attributes().value(QString("name")).toString().remove("Step");
-            *_out << " changeStep(" << _step << ");" << Qt::endl;
+        if(_isStep()) {
+            _step = _getStepName();
+            _printChangeStep(_step);
             _last = Step;
         }
 
-        else if(_xml->name() == QString("inVariable") && _xml->tokenType() == QXmlStreamReader::StartElement) {
+        else if(_isTransition()) {
             QString condition = _reachCondition();
 
             if(_last == Trans) {
-                *_out << " changeStep(" << _convStep.last() << ");" << Qt::endl;
-                *_out << "if(step == " << _divStep.last() << " && (" << condition << "))";
+                _level=_divStep.length();
+                _printChangeStep(_convStep.last());
+                _indent(_divLevel.last()++);
+                _printIf(_divStep.last(), condition);
+            } else {
+                _indent(_level++);
+                _printIf(_step, condition);
             }
-            else *_out << "if(step == " << _step << " && (" << condition << "))";
 
             _last = Trans;
         }
 
-        else if(_xml->name() == QString("jumpStep") && _xml->tokenType() == QXmlStreamReader::StartElement) {
-            QString name = _xml->attributes().value(QString("targetName")).toString().remove("Step");
-            *_out << " changeStep(" << name << ");" << Qt::endl;
+        else if(_isJumpStep()) {
+            QString name = _getJumpStepName();
+            _printChangeStep(name);
             _last = Jump;
         }
 
-        else if(_xml->name() == QString("selectionDivergence") && _xml->tokenType() == QXmlStreamReader::StartElement) {
-            _level++;
+        else if(_isDivergence()) { //TODO non per forza in fondo ci deve essere una convergenza
             _divStep.append(_step);
             _convStep.append(_searchConvStep());
-
+            _divLevel.append(_level);
             _last = Divergence;
         }
 
-        else if(_xml->name() == QString("selectionConvergence") && _xml->tokenType() == QXmlStreamReader::StartElement) {
+        else if(_isConvergence()) {
             _divStep.removeLast();
             _convStep.removeLast();
+            _divLevel.removeLast();
             _last = Convergence;
         }
 
     }
 
-    return _out;
 }
 
 void Converter::_reachSFC() {
     while(_xml->name() != QString("SFC")) _xml->readNextStartElement();
 }
 
-void Converter::_indent() {
-    for(quint8 i=0; i<_level; i++) *_out<<"\t";
+void Converter::_indent(quint8 level) {
+    for(quint8 i=0; i<level; i++) *_out<<"    ";
 }
 
 QString Converter::_reachCondition() {
@@ -89,12 +92,11 @@ QString Converter::_searchConvStep() {
     qint64 startLine = _xml->lineNumber();
 
     do _xml->readNext();
-    while(!(_xml->name() == QString("selectionConvergence") && _xml->tokenType() == QXmlStreamReader::EndElement));
+    while(!_isConvergence(QXmlStreamReader::EndElement));
 
     do _xml->readNext();
-    while(!(_xml->name() == QString("step") && _xml->tokenType() == QXmlStreamReader::StartElement));
-
-    QString name = _xml->attributes().value(QString("name")).toString().remove("Step");
+    while(!_isStep());
+    QString name = _getStepName();
 
     _xmlFile->seek(0);
     _xml->setDevice(_xmlFile);
@@ -102,4 +104,40 @@ QString Converter::_searchConvStep() {
     while(_xml->lineNumber() != startLine+1);
 
     return name;
+}
+
+QString Converter::_getStepName() {
+    return _xml->attributes().value(QString("name")).toString().remove("Step");
+}
+
+QString Converter::_getJumpStepName() {
+    return _xml->attributes().value(QString("targetName")).toString().remove("Step");
+}
+
+bool Converter::_isConvergence(QXmlStreamReader::TokenType tokenType) {
+    return _xml->name() == QString("selectionConvergence") && _xml->tokenType() == tokenType;
+}
+
+bool Converter::_isDivergence(QXmlStreamReader::TokenType tokenType) {
+    return _xml->name() == QString("selectionDivergence") && _xml->tokenType() == tokenType;
+}
+
+bool Converter::_isStep(QXmlStreamReader::TokenType tokenType) {
+    return _xml->name() == QString("step") && _xml->tokenType() == tokenType;
+}
+
+bool Converter::_isJumpStep(QXmlStreamReader::TokenType tokenType) {
+    return _xml->name() == QString("jumpStep") && _xml->tokenType() == tokenType;
+}
+
+bool Converter::_isTransition(QXmlStreamReader::TokenType tokenType) {
+    return _xml->name() == QString("inVariable") && _xml->tokenType() == tokenType;
+}
+
+void Converter::_printChangeStep(QString step) {
+    *_out << " changeStep(" << step << ");" << "\n" << Qt::flush;
+}
+
+void Converter::_printIf(QString step, QString condition) {
+    *_out << "if(step == " << step << " && (" << condition << "))";
 }

@@ -33,18 +33,27 @@ private:
     QString _step;
     QVector<QString> _divStep;
     QVector<QString> _convStep;
+    QVector<quint8> _divLevel;
     SFC _last;
 
     //Methods
     void _reachSFC();
     QString _reachCondition();
-    void _indent();
+    void _indent(quint8 level);
     QString _searchConvStep();
-
+    QString _getStepName();
+    QString _getJumpStepName();
+    bool _isConvergence(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
+    bool _isDivergence(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
+    bool _isStep(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
+    bool _isJumpStep(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
+    bool _isTransition(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
+    void _printChangeStep(QString step);
+    void _printIf(QString step, QString condition);
 public:
     Converter(QString fileIn, QString fileOut);
     ~Converter();
-    QTextStream* exec();
+    void exec();
 };
 
 
