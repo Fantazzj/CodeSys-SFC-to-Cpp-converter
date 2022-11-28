@@ -11,16 +11,35 @@
 #include <QXmlStreamReader>
 #include <QTextStream>
 
+enum SFC {
+    Step,
+    Trans,
+    Action,
+    Jump,
+    Convergence,
+    Divergence
+};
+
 class Converter {
 private:
+    //Files IO
     QFile* _xmlFile;
     QXmlStreamReader* _xml;
     QFile* _outFile;
     QTextStream* _out;
+
+    //
     quint8 _level = 0;
+    QString _step;
+    QVector<QString> _divStep;
+    QVector<QString> _convStep;
+    SFC _last;
+
+    //Methods
     void _reachSFC();
-    void _reachCondition();
+    QString _reachCondition();
     void _indent();
+    QString _searchConvStep();
 
 public:
     Converter(QString fileIn, QString fileOut);
