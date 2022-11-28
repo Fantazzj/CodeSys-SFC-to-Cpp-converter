@@ -4,14 +4,14 @@
 
 #include "Converter.hpp"
 
-Converter::Converter(char* fileIn, char* fileOut) {
+Converter::Converter(QString fileIn, QString fileOut) {
     _xmlFile = new QFile(fileIn);
     _xmlFile->open(QIODevice::ReadOnly | QIODevice::Text);
     _xml = new QXmlStreamReader(_xmlFile);
 
-    //QFile outFile = QFile("_out.cpp");
-    //_outFile.open(QIODevice::WriteOnly | QIODevice::Text);
-    //QTextStream _out = QTextStream(&_outFile);
+    //_outFile = new QFile(fileOut);
+    //_outFile->open(QIODevice::WriteOnly | QIODevice::Text);
+    //_out = new QTextStream(_outFile);
     _out = new QTextStream(stdout);
 }
 
