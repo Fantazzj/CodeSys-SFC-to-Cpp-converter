@@ -75,3 +75,7 @@ build/*
 
 # CLion files
 .idea/*
+
+# Codesys Files
+*.precompilecache
+*.opt
