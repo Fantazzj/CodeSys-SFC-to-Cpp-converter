@@ -35,8 +35,8 @@ void Converter::exec() {
         else if(_isTransition()) {
             QString condition = _reachCondition();
 
-            if(_last == Trans) {
-                _level=_divStep.length();
+            if(_last == Trans || _last == Jump) {
+                _level=_divLevel.last();
                 _printChangeStep(_convStep.last());
                 _indent(_divLevel.last()++);
                 _printIf(_divStep.last(), condition);
@@ -56,7 +56,7 @@ void Converter::exec() {
 
         else if(_isDivergence()) { //TODO non per forza in fondo ci deve essere una convergenza
             _divStep.append(_step);
-            _convStep.append(_searchConvStep());
+            _convStep.append(_searchAfterConv());
             _divLevel.append(_level);
             _last = Divergence;
         }
@@ -77,7 +77,7 @@ void Converter::_reachSFC() {
 }
 
 void Converter::_indent(quint8 level) {
-    for(quint8 i=0; i<level; i++) *_out<<"    ";
+    //for(quint8 i=0; i<level; i++) *_out<<"    ";
 }
 
 QString Converter::_reachCondition() {
@@ -88,15 +88,18 @@ QString Converter::_reachCondition() {
     return _xml->text().toString();
 }
 
-QString Converter::_searchConvStep() {
+QString Converter::_searchAfterConv() {
     qint64 startLine = _xml->lineNumber();
 
     do _xml->readNext();
     while(!_isConvergence(QXmlStreamReader::EndElement));
 
     do _xml->readNext();
-    while(!_isStep());
-    QString name = _getStepName();
+    while(!_isStep() && !_isJumpStep());
+
+    QString name;
+    if(_isStep()) name = _getStepName();
+    else if(_isJumpStep()) name = _getJumpStepName();
 
     _xmlFile->seek(0);
     _xml->setDevice(_xmlFile);

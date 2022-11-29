@@ -40,7 +40,7 @@ private:
     void _reachSFC();
     QString _reachCondition();
     void _indent(quint8 level);
-    QString _searchConvStep();
+    QString _searchAfterConv();
     QString _getStepName();
     QString _getJumpStepName();
     bool _isConvergence(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
@@ -55,6 +55,5 @@ public:
     ~Converter();
     void exec();
 };
-
 
 #endif//CODESYS_SFC_TO_CPP_CONVERTER_CONVERTER_HPP
