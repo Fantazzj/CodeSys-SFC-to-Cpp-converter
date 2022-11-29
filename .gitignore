@@ -77,5 +77,6 @@ build/*
 .idea/*
 
 # Codesys Files
+*.~u
 *.precompilecache
 *.opt
