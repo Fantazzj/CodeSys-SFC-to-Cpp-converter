@@ -28,12 +28,16 @@ void Converter::exec() {
 
         if(_isStep()) {
             _step = _getStepName();
-            _printChangeStep(_step);
+            if(!_isInitialStep()) _printChangeStep(_step);
             _last = Step;
         }
 
         else if(_isTransition()) {
             QString condition = _reachCondition();
+            condition.replace("and", "&&");
+            condition.replace("or", "||");
+            condition.remove("Step");
+            condition.replace(".t", "elapsedTime()");
 
             if(_last == Trans || _last == Jump) {
                 _level=_divLevel.last();
@@ -54,7 +58,7 @@ void Converter::exec() {
             _last = Jump;
         }
 
-        else if(_isDivergence()) { //TODO non per forza in fondo ci deve essere una convergenza
+        else if(_isDivergence()) { //TODO inserisce ancora il changeStep()
             _divStep.append(_step);
             _convStep.append(_searchAfterConv());
             _divLevel.append(_level);
@@ -127,6 +131,10 @@ bool Converter::_isDivergence(QXmlStreamReader::TokenType tokenType) {
 
 bool Converter::_isStep(QXmlStreamReader::TokenType tokenType) {
     return _xml->name() == QString("step") && _xml->tokenType() == tokenType;
+}
+
+bool Converter::_isInitialStep() {
+    return _xml->attributes().value(QString("initialStep")).toString() == "true";
 }
 
 bool Converter::_isJumpStep(QXmlStreamReader::TokenType tokenType) {

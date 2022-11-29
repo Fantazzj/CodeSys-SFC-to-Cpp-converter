@@ -46,6 +46,7 @@ private:
     bool _isConvergence(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     bool _isDivergence(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     bool _isStep(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
+    bool _isInitialStep();
     bool _isJumpStep(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     bool _isTransition(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     void _printChangeStep(QString step);

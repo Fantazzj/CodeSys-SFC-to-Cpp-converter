@@ -1,4 +1,3 @@
- changeStep(Init);
 if(step == Init && (trans0)) changeStep(0);
 if(step == 0 && (trans4)) changeStep(4);
 if(step == Init && (trans7)) changeStep(7);
