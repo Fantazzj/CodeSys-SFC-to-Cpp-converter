@@ -1,24 +1,42 @@
+#include <QXmlStreamReader>
+#include <QTextStream>
+#include <QFile>
+#include <QString>
+#include <QDebug>
 #include "Converter.hpp"
 
 int main(int argc, char* argv[]) {
 
-    /*
-     * QFile xmlFile = QFile(argv[1]);
+    //region Filenames
+    QString xmlFileName = QString(argv[1]);
+    QString cppFileName = QString(argv[1]).replace("xml", "cpp");
+    QString hppFileName = QString(argv[1]).replace("xml", "hpp");
+    //endregion
+
+    //region FileOpening
+    QFile xmlFile = QFile(xmlFileName);
     xmlFile.open(QIODevice::ReadOnly | QIODevice::Text);
-    QXmlStreamReader xml = QXmlStreamReader(&xmlFile);
+    QXmlStreamReader* xml = new QXmlStreamReader(&xmlFile);
 
-    //QFile outFile = QFile("out.cpp");
-    //outFile.open(QIODevice::WriteOnly | QIODevice::Text);
-    //QTextStream out = QTextStream(&outFile);
-    QTextStream out = QTextStream(stdout);
-     */
+    QFile cppFile = QFile(cppFileName);
+    cppFile.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream* cpp = new QTextStream(&cppFile);
 
-    QString outFile = QString(argv[1]);
-    outFile.replace("xml", "txt");
+    QFile hppFile = QFile(hppFileName);
+    hppFile.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream* hpp = new QTextStream(&hppFile);
 
-    Converter converter = Converter(argv[1], outFile);
+    //qDebug() << xmlFileName << cppFileName << hppFileName;
+    //endregion
 
+    Converter converter = Converter(xml, &xmlFile, cpp, hpp);
     converter.exec();
+
+    //region FileClosing
+    xmlFile.close();
+    cppFile.close();
+    hppFile.close();
+    //endregion
 
     return 0;
 }
