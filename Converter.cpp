@@ -36,12 +36,14 @@ void Converter::exec() {
             QString condition = _reachCondition();
             condition.replace("and", "&&");
             condition.replace("or", "||");
-            condition.remove("Step");
-            condition.replace(".t", "elapsedTime()");
 
-            if(_last == Trans || _last == Jump) {
+            if(_last == Transition) {
                 _level=_divLevel.last();
                 _printChangeStep(_convStep.last());
+                _indent(_divLevel.last()++);
+                _printIf(_divStep.last(), condition);
+            } else if(_last == Jump) {
+                _level=_divLevel.last();
                 _indent(_divLevel.last()++);
                 _printIf(_divStep.last(), condition);
             } else {
@@ -49,7 +51,7 @@ void Converter::exec() {
                 _printIf(_step, condition);
             }
 
-            _last = Trans;
+            _last = Transition;
         }
 
         else if(_isJumpStep()) {
@@ -58,7 +60,7 @@ void Converter::exec() {
             _last = Jump;
         }
 
-        else if(_isDivergence()) { //TODO inserisce ancora il changeStep()
+        else if(_isDivergence()) {
             _divStep.append(_step);
             _convStep.append(_searchAfterConv());
             _divLevel.append(_level);
@@ -99,7 +101,7 @@ QString Converter::_searchAfterConv() {
     while(!_isConvergence(QXmlStreamReader::EndElement));
 
     do _xml->readNext();
-    while(!_isStep() && !_isJumpStep());
+    while(!_isStep() && !_isJumpStep() && !_xml->atEnd());
 
     QString name;
     if(_isStep()) name = _getStepName();
@@ -114,11 +116,11 @@ QString Converter::_searchAfterConv() {
 }
 
 QString Converter::_getStepName() {
-    return _xml->attributes().value(QString("name")).toString().remove("Step");
+    return _xml->attributes().value(QString("name")).toString();
 }
 
 QString Converter::_getJumpStepName() {
-    return _xml->attributes().value(QString("targetName")).toString().remove("Step");
+    return _xml->attributes().value(QString("targetName")).toString();
 }
 
 bool Converter::_isConvergence(QXmlStreamReader::TokenType tokenType) {
@@ -146,9 +148,10 @@ bool Converter::_isTransition(QXmlStreamReader::TokenType tokenType) {
 }
 
 void Converter::_printChangeStep(QString step) {
-    *_out << " changeStep(" << step << ");" << "\n" << Qt::flush;
+    if(!step.isEmpty())
+        *_out << " changeStep(" << step << ");" << "\n" << Qt::flush;
 }
 
 void Converter::_printIf(QString step, QString condition) {
-    *_out << "if(step == " << step << " && (" << condition << "))";
+    *_out << "if(step == " << step << " && (" << condition << "))" << Qt::flush;
 }

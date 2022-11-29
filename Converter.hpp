@@ -13,7 +13,7 @@
 
 enum SFC {
     Step,
-    Trans,
+    Transition,
     Action,
     Jump,
     Convergence,
