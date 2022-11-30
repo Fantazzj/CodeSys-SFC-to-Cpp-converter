@@ -7,19 +7,22 @@
 
 #include <QXmlStreamReader>
 #include <QTextStream>
+#include "VarsConverter.hpp"
 #include "SFCConverter.hpp"
 
 class Converter {
 private:
     QXmlStreamReader* _xml;
     QFile* _xmlFile;
-    QTextStream* _cpp;
-    QTextStream* _hpp;
-    SFCConverter* _sfcConverter;
+    //QTextStream* _cpp;
+    //QTextStream* _hpp;
+    //SFCConverter* _sfcConverter;
 
     void _reachBody();
+    void _reachPous();
+    void _convertPou();
 public:
-    Converter(QXmlStreamReader* xml, QFile* xmlFile, QTextStream* cpp, QTextStream* hpp);
+    Converter(QXmlStreamReader* xml, QFile* xmlFile/*, QTextStream* cpp, QTextStream* hpp*/);
     void exec();
 };
 

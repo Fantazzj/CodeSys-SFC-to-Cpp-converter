@@ -16,10 +16,10 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_executable(CodeSys-SFC-to-Cpp-converter
         main.cpp
-        SFCConverter.cpp
-        SFCConverter.hpp
-        Converter.cpp
-        Converter.hpp)
+        src/SFCConverter.cpp
+        src/SFCConverter.hpp
+        src/Converter.cpp
+        src/Converter.hpp src/VarsConverter.cpp src/VarsConverter.hpp)
 target_link_libraries(CodeSys-SFC-to-Cpp-converter Qt${QT_VERSION_MAJOR}::Core)
 
 install(TARGETS CodeSys-SFC-to-Cpp-converter
