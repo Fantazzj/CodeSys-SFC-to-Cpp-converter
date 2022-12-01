@@ -15,27 +15,25 @@ Converter::Converter(QXmlStreamReader* xml, QFile* xmlFile/*, QTextStream* cpp, 
 void Converter::exec() {
     _reachPous();
 
-    _xml->readNextStartElement();
-    _convertPou();
-
-    //if(_xml->name() == QString("localVars"))
-
-
-    //if(_xml->name() == QString("SFC"))
-        //_sfcConverter->exec();
+    do {
+        _reachNextPou();
+        QString a = _xml->name().toString();
+        _convertPou();
+    } while((_xml->name() == QString("body") && _xml->isEndElement()) &&
+            !_xml->isEndDocument());
 
 }
 
 void Converter::_reachBody() {
-    while(_xml->name() != QString("body")) _xml->readNextStartElement();
+    while(_xml->name() != QString("body") && !_xml->isEndDocument()) _xml->readNextStartElement();
 }
 void Converter::_reachPous() {
-    while(_xml->name() != QString("pous")) _xml->readNextStartElement();
+    while(_xml->name() != QString("pous") && !_xml->isEndDocument()) _xml->readNextStartElement();
 }
 
 void Converter::_convertPou() {
     QString pouName = _xml->attributes().value(QString("name")).toString();
-    VarsConverter varsConverter = VarsConverter();
+    //qDebug() << _xml->attributes().value(QString("name")).toString();
 
     QFile cppFile = QFile("..\\"+pouName+".cpp");
     cppFile.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -45,11 +43,26 @@ void Converter::_convertPou() {
     hppFile.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream* hpp = new QTextStream(&hppFile);
 
-    if(1) {
+    *hpp << "#ifndef " << pouName.toUpper() << "\n" << Qt::flush;
+    *hpp << "#define " << pouName.toUpper() << "\n\n" << Qt::flush;
+
+    VarsConverter varsConverter = VarsConverter(_xml, _xmlFile, cpp, hpp);
+    varsConverter.exec();
+
+    _reachBody();
+    _xml->readNextStartElement();
+
+    if(_xml->name() == QString("SFC")) {
         SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, cpp, hpp);
         sfcConverter.exec();
     }
 
+    *hpp << "#endif\n" << Qt::flush;
+
     cppFile.close();
     hppFile.close();
+}
+
+void Converter::_reachNextPou() {
+    while(_xml->name() != QString("pou") && !_xml->isEndDocument()) _xml->readNextStartElement();
 }

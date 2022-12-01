@@ -19,7 +19,9 @@ add_executable(CodeSys-SFC-to-Cpp-converter
         src/SFCConverter.cpp
         src/SFCConverter.hpp
         src/Converter.cpp
-        src/Converter.hpp src/VarsConverter.cpp src/VarsConverter.hpp)
+        src/Converter.hpp
+        src/VarsConverter.cpp
+        src/VarsConverter.hpp)
 target_link_libraries(CodeSys-SFC-to-Cpp-converter Qt${QT_VERSION_MAJOR}::Core)
 
 install(TARGETS CodeSys-SFC-to-Cpp-converter

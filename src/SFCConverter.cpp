@@ -176,7 +176,7 @@ void SFCConverter::_printIf(QString step, QString condition) {
 }
 
 void SFCConverter::_printEnum(QVector<QString> stepsList) {
-    *_cpp << "enum Step: int {\n";
-    for(QString S: stepsList) *_cpp << "\t" << S << ",\n";
-    *_cpp << "};\n\n" << Qt::flush;
+    *_hpp << "enum Step: int {\n";
+    for(QString S: stepsList) *_hpp << "\t" << S << ",\n";
+    *_hpp << "};\n\n" << Qt::flush;
 }

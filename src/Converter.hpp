@@ -20,6 +20,7 @@ private:
 
     void _reachBody();
     void _reachPous();
+    void _reachNextPou();
     void _convertPou();
 public:
     Converter(QXmlStreamReader* xml, QFile* xmlFile/*, QTextStream* cpp, QTextStream* hpp*/);

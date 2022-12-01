@@ -4,6 +4,13 @@
 
 #include "VarsConverter.hpp"
 
-VarsConverter::VarsConverter() {
+VarsConverter::VarsConverter(QXmlStreamReader* xml, QFile* xmlFile, QTextStream* cpp, QTextStream* hpp) {
+    _xml = xml;
+    _xmlFile = xmlFile;
+    _cpp = cpp;
+    _hpp = hpp;
+}
+
+void VarsConverter::exec() {
 
 }
