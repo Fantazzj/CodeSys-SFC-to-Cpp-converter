@@ -46,6 +46,8 @@ void Converter::_convertPou() {
          << Qt::flush;
     *hpp << "#define " << pouName.toUpper() << "\n\n"
          << Qt::flush;
+    *cpp << "#include \"" << pouName.toUpper() << ".hpp\"\n\n"
+         << Qt::flush;
 
     VarsConverter varsConverter = VarsConverter(_xml, _xmlFile, cpp, hpp);
     varsConverter.exec();

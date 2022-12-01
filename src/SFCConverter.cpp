@@ -13,9 +13,13 @@ SFCConverter::SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QTextStream* c
 void SFCConverter::exec() {
     QVector<QString> stepsList;
     stepsList = _searchSteps();
+
     _printEnum(stepsList);
 
-    int i = 0;
+    *_hpp << "Step step;\n"
+          << Qt::flush;
+
+    //int i = 0;
 
     *_cpp << "void autoCycle() {\n"
           << Qt::flush;
@@ -134,7 +138,7 @@ QVector<QString> SFCConverter::_searchSteps() {
     while(_xml->lineNumber() != startLine + 1);
      */
 
-    _backToLine(startLine+1);
+    _backToLine(startLine + 1);
 
     return stepsList;
 }
