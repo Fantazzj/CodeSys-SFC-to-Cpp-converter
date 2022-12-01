@@ -6,8 +6,8 @@
 #define CODESYS_SFC_TO_CPP_CONVERTER_VARSCONVERTER_HPP
 
 #include <QFile>
-#include <QXmlStreamReader>
 #include <QTextStream>
+#include <QXmlStreamReader>
 
 class VarsConverter {
 private:

@@ -12,5 +12,4 @@ VarsConverter::VarsConverter(QXmlStreamReader* xml, QFile* xmlFile, QTextStream*
 }
 
 void VarsConverter::exec() {
-
 }

@@ -21,8 +21,8 @@ add_executable(CodeSys-SFC-to-Cpp-converter
         src/Converter.cpp
         src/Converter.hpp
         src/VarsConverter.cpp
-        src/VarsConverter.hpp)
+        src/VarsConverter.hpp src/GeneralConverter.cpp src/GeneralConverter.hpp)
 target_link_libraries(CodeSys-SFC-to-Cpp-converter Qt${QT_VERSION_MAJOR}::Core)
 
 install(TARGETS CodeSys-SFC-to-Cpp-converter
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

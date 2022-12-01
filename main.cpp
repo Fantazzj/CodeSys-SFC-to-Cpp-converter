@@ -6,7 +6,6 @@
 #include <QXmlStreamReader>
 
 int main(int argc, char* argv[]) {
-
     //region Filenames
     QString xmlFileName = QString(argv[1]);
     //QString cppFileName = QString(argv[1]).replace("xml", "cpp");
@@ -31,7 +30,7 @@ int main(int argc, char* argv[]) {
     //qDebug() << xmlFileName << cppFileName << hppFileName;
     //endregion
 
-    Converter converter = Converter(xml, &xmlFile/*, cpp, hpp*/);
+    Converter converter = Converter(xml, &xmlFile /*, cpp, hpp*/);
     converter.exec();
 
     //region FileClosing
