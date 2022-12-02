@@ -1,5 +1,5 @@
-#ifndef PLC_PRG
-#define PLC_PRG
+#ifndef PLC_PRG_HPP
+#define PLC_PRG_HPP
 
 enum Step: int {
 	Init,
@@ -10,6 +10,34 @@ enum Step: int {
 	Step9,
 	Step10,
 	Step11,
+};
+
+class PLC_PRG {
+public:
+	bool trans0;
+	bool trans1;
+	bool trans2;
+	bool trans4;
+	bool trans5;
+	bool trans6;
+	bool trans7;
+	bool trans8;
+	bool trans9;
+	bool trans10;
+	bool out0;
+	bool trans12;
+	bool trans13;
+	bool trans11;
+	bool trans15;
+	bool trans14;
+	bool trans16;
+	bool trans17;
+	void autoCycle();
+	void writeOutput();
+
+private:
+	Step step;
+	void changeStep(Step step);
 };
 
 #endif

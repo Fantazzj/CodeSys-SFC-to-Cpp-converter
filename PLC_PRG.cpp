@@ -1,15 +1,6 @@
-enum Step: int {
-	Init,
-	Step0,
-	Step7,
-	Step4,
-	Step8,
-	Step9,
-	Step10,
-	Step11,
-};
+#include "PLC_PRG.hpp"
 
-void autoCycle() {
+void PLC_PRG::autoCycle() {
 	if(step == Init && (trans0)) changeStep(Step0);
 	if(step == Step0 && (trans4)) changeStep(Step4);
 	if(step == Init && (trans7)) changeStep(Step7);
