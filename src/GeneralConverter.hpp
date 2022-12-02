@@ -20,9 +20,9 @@ protected:
     QFile* _xmlFile;
     void _reachElement(QString name, QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     bool _isElement(QString name, QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
+    QString _getAttribute(QString attribute);
     void _backToLine(qint64 line);
     void _goToLine(qint64 line);
 };
-
 
 #endif//CODESYS_SFC_TO_CPP_CONVERTER_GENERALCONVERTER_HPP

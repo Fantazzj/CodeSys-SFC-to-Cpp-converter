@@ -5,7 +5,6 @@
 #ifndef CODESYS_SFC_TO_CPP_CONVERTER_SFCCONVERTER_HPP
 #define CODESYS_SFC_TO_CPP_CONVERTER_SFCCONVERTER_HPP
 
-#include "Converter.hpp"
 #include "GeneralConverter.hpp"
 #include <QDebug>
 #include <QFile>
@@ -50,7 +49,7 @@ private:
     //bool _isConvergence(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     //bool _isDivergence(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     //bool _isStep(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
-    bool _isInitialStep();
+    //bool _isInitialStep();
     //bool _isJumpStep(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     //bool _isTransition(QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     void _printChangeStep(QString step);

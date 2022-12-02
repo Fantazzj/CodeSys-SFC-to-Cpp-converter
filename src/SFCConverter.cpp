@@ -28,7 +28,7 @@ void SFCConverter::exec() {
 
         if(_isElement("step")) {
             _step = _getStepName();
-            if(!_isInitialStep()) _printChangeStep(_step);
+            if(_getAttribute("initialStep")!="true") _printChangeStep(_step);
             //if(!_stepsList.contains(_step)) _stepsList.append(_step);
             _last = Step;
         }
@@ -163,10 +163,10 @@ bool SFCConverter::_isDivergence(QXmlStreamReader::TokenType tokenType) {
 bool SFCConverter::_isStep(QXmlStreamReader::TokenType tokenType) {
     return _xml->name() == QString("step") && _xml->tokenType() == tokenType;
 }*/
-
+/*
 bool SFCConverter::_isInitialStep() {
     return _xml->attributes().value(QString("initialStep")).toString() == "true";
-}
+}*/
 /*
 bool SFCConverter::_isJumpStep(QXmlStreamReader::TokenType tokenType) {
     return _xml->name() == QString("jumpStep") && _xml->tokenType() == tokenType;
