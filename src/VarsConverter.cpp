@@ -1,10 +1,7 @@
 #include "VarsConverter.hpp"
 
-VarsConverter::VarsConverter(QXmlStreamReader* xml, QFile* xmlFile, QTextStream* cpp, QTextStream* hpp) :
-    GeneralConverter(xml, xmlFile) {
-    _cpp = cpp;
-    _hpp = hpp;
-}
+VarsConverter::VarsConverter(QXmlStreamReader* xml, QFile* xmlFile) :
+    GeneralConverter(xml, xmlFile) {}
 
 void VarsConverter::exec() {
     Variable variable;
@@ -14,8 +11,7 @@ void VarsConverter::exec() {
 
         if(_isElement("variable")) {
             variable.name = _getVarName();
-        }
-        else if(_isElement("type")) {
+        } else if(_isElement("type")) {
             _xml->readNextStartElement();
             variable.type = _xml->name().toString().toLower();
             _variables.append(variable);
@@ -23,14 +19,11 @@ void VarsConverter::exec() {
     }
 
     _printVariables(_variables);
-    *_hpp << "\n" << Qt::flush;
-
 }
 
 void VarsConverter::_printVariables(QVector<Variable> variablesList) {
     for(Variable V: variablesList)
-        *_hpp << "\t" << V.type << " " << V.name << ";\n"
-              << Qt::flush;
+        pubVars += QString("\t") + V.type + QString(" ") + V.name + QString(";\n");
 }
 
 QString VarsConverter::_getVarName() {

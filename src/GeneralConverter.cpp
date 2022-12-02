@@ -5,7 +5,7 @@ GeneralConverter::GeneralConverter(QXmlStreamReader* xml, QFile* xmlFile) {
     _xmlFile = xmlFile;
 }
 
-void GeneralConverter::exec() { }
+void GeneralConverter::exec() {}
 
 void GeneralConverter::_reachElement(QString name, QXmlStreamReader::TokenType tokenType) {
     while(!_xml->isEndDocument() && (_xml->name() != name || _xml->tokenType() != tokenType)) {
