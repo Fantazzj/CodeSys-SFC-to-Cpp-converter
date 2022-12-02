@@ -1,7 +1,3 @@
-//
-// Created by Fantazz on 30/11/2022.
-//
-
 #include "VarsConverter.hpp"
 
 VarsConverter::VarsConverter(QXmlStreamReader* xml, QFile* xmlFile, QTextStream* cpp, QTextStream* hpp) :
@@ -18,7 +14,6 @@ void VarsConverter::exec() {
 
         if(_isElement("variable")) {
             variable.name = _getVarName();
-            //qDebug() << variable.name;
         }
         else if(_isElement("type")) {
             _xml->readNextStartElement();

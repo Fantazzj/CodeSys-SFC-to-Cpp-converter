@@ -1,16 +1,9 @@
-//
-// Created by Fantazz on 29/11/2022.
-//
-
 #include "Converter.hpp"
 
-Converter::Converter(QXmlStreamReader* xml, QFile* xmlFile /*, QTextStream* cpp, QTextStream* hpp*/) :
+Converter::Converter(QXmlStreamReader* xml, QFile* xmlFile) :
     GeneralConverter(xml, xmlFile) {
     _xml = xml;
     _xmlFile = xmlFile;
-    //_cpp = cpp;
-    //_hpp = hpp;
-    //_sfcConverter = new SFCConverter(_xml, _xmlFile, _cpp, _hpp);
 }
 
 void Converter::exec() {
@@ -23,14 +16,6 @@ void Converter::exec() {
             !_xml->isEndDocument());
 }
 
-/*void Converter::_reachBody() {
-    while(_xml->name() != QString("body") && !_xml->isEndDocument()) _xml->readNextStartElement();
-}
-
-void Converter::_reachPous() {
-    while(_xml->name() != QString("pous") && !_xml->isEndDocument()) _xml->readNextStartElement();
-}
-*/
 void Converter::_convertPou() {
     QString pouName = _xml->attributes().value(QString("name")).toString();
 
@@ -66,8 +51,3 @@ void Converter::_convertPou() {
     cppFile.close();
     hppFile.close();
 }
-/*
-void Converter::_reachNextPou() {
-    while(_xml->name() != QString("pou") && !_xml->isEndDocument()) _xml->readNextStartElement();
-}
-*/

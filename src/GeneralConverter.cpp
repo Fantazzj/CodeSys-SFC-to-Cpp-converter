@@ -1,7 +1,3 @@
-//
-// Created by Fantazz on 01/12/2022.
-//
-
 #include "GeneralConverter.hpp"
 
 GeneralConverter::GeneralConverter(QXmlStreamReader* xml, QFile* xmlFile) {
