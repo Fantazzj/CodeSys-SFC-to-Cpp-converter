@@ -27,9 +27,9 @@ void Converter::_convertPou() {
     hppFile.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream* hpp = new QTextStream(&hppFile);
 
-    *hpp << "#ifndef " << pouName.toUpper() << "\n"
+    *hpp << "#ifndef " << pouName.toUpper() << "_HPP" << "\n"
          << Qt::flush;
-    *hpp << "#define " << pouName.toUpper() << "\n\n"
+    *hpp << "#define " << pouName.toUpper() << "_HPP" << "\n\n"
          << Qt::flush;
     *cpp << "#include \"" << pouName.toUpper() << ".hpp\"\n\n"
          << Qt::flush;
