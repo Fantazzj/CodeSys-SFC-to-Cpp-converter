@@ -18,7 +18,7 @@ void VarsConverter::exec() {
 
         if(_isElement("variable")) {
             variable.name = _getVarName();
-            qDebug() << variable.name;
+            //qDebug() << variable.name;
         }
         else if(_isElement("type")) {
             _xml->readNextStartElement();
