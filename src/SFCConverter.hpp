@@ -19,8 +19,7 @@ enum SFC {
 
 class SFCConverter : public GeneralConverter {
 private:
-    QTextStream* _cpp;
-    QTextStream* _hpp;
+    QString _pouName;
     QString _step;
     QVector<QString> _divStep;
     QVector<QString> _convStep;
@@ -36,8 +35,12 @@ private:
     void _printEnum(QVector<QString> stepsList);
 
 public:
-    SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QTextStream* cpp, QTextStream* hpp);
+    SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName);
     void exec();
+    QString enumStates;
+    QString autoCycle;
+    QString outputWrite;
+    QString privVars;
 };
 
 #endif//CODESYS_SFC_TO_CPP_CONVERTER_SFCCONVERTER_HPP

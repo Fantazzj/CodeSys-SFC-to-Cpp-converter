@@ -1,9 +1,8 @@
 #include "SFCConverter.hpp"
 
-SFCConverter::SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QTextStream* cpp, QTextStream* hpp) :
+SFCConverter::SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName) :
     GeneralConverter(xml, xmlFile) {
-    _cpp = cpp;
-    _hpp = hpp;
+    _pouName = pouName;
 }
 
 void SFCConverter::exec() {
@@ -12,17 +11,16 @@ void SFCConverter::exec() {
 
     _printEnum(stepsList);
 
-    *_hpp << "Step step;\n"
-          << Qt::flush;
+    privVars += QString("Step step;\n");
 
-    *_cpp << "void autoCycle() {\n"
-          << Qt::flush;
+    autoCycle += QString("void ") + _pouName + QString("::autoCycle() {\n");
+
     while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
         _xml->readNext();
 
         if(_isElement("step")) {
             _step = _getStepName();
-            if(_getAttribute("initialStep")!="true") _printChangeStep(_step);
+            if(_getAttribute("initialStep") != "true") _printChangeStep(_step);
             _last = Step;
         }
 
@@ -61,8 +59,8 @@ void SFCConverter::exec() {
             _last = Convergence;
         }
     }
-    *_cpp << "}\n"
-          << Qt::flush;
+
+    autoCycle += QString("}\n");
 }
 
 QString SFCConverter::_reachCondition() {
@@ -122,19 +120,15 @@ QString SFCConverter::_getJumpStepName() {
 
 void SFCConverter::_printChangeStep(QString step) {
     if(!step.isEmpty())
-        *_cpp << " changeStep(" << step << ");"
-              << "\n"
-              << Qt::flush;
+        autoCycle += QString(" changeStep(") + step + QString(");\n");
 }
 
 void SFCConverter::_printIf(QString step, QString condition) {
-    *_cpp << "\t"
-          << "if(step == " << step << " && (" << condition << "))" << Qt::flush;
+    autoCycle += QString("\t") + QString("if(step == ") + step + QString(" && (") + condition + QString("))");
 }
 
 void SFCConverter::_printEnum(QVector<QString> stepsList) {
-    *_hpp << "enum Step: int {\n";
-    for(QString S: stepsList) *_hpp << "\t" << S << ",\n";
-    *_hpp << "};\n\n"
-          << Qt::flush;
+    enumStates += QString("enum Step: int {\n");
+    for(QString S: stepsList) enumStates += QString("\t") + S + QString(",\n");
+    enumStates += QString("};\n\n");
 }

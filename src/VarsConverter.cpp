@@ -29,7 +29,7 @@ void VarsConverter::exec() {
 
 void VarsConverter::_printVariables(QVector<Variable> variablesList) {
     for(Variable V: variablesList)
-        *_hpp << V.type << " " << V.name << ";\n"
+        *_hpp << "\t" << V.type << " " << V.name << ";\n"
               << Qt::flush;
 }
 
