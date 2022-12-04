@@ -15,6 +15,8 @@ void SFCConverter::exec() {
 
     autoCycle += QString("void ") + _pouName + QString("::autoCycle() {\n");
 
+    outputAnalysis += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
+
     while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
         _xml->readNext();
 
@@ -58,9 +60,35 @@ void SFCConverter::exec() {
             _convStep.removeLast();
             _last = Convergence;
         }
+
+        else if(_isElement("actionBlock")) {
+            _reachElement("reference");
+            QString variable = _getAttribute("name");
+
+            bool exists = false;
+            for(Output O : outputs) {
+                if(O.variable == variable) {
+                    O.steps.append(_step);
+                    exists = true;
+                }
+            }
+            if(!exists) {
+                Output output;
+                output.variable = variable;
+                output.steps.append(_step);
+                outputs.append(output);
+            }
+
+            _last = Action;
+        }
+
     }
 
     autoCycle += QString("}\n");
+
+    outputAnalysis += _assembleOutputAnalysis(outputs);
+    outputAnalysis += QString("}\n");
+
 }
 
 QString SFCConverter::_reachCondition() {
@@ -131,4 +159,19 @@ void SFCConverter::_printEnum(QVector<QString> stepsList) {
     enumStates += QString("enum Step: int {\n");
     for(QString S: stepsList) enumStates += QString("\t") + S + QString(",\n");
     enumStates += QString("};\n\n");
+}
+
+QString SFCConverter::_assembleOutputAnalysis(QVector<Output> outputs) {
+    QString out;
+
+    for(Output O : outputs) {
+        out += QString("\tif(");
+        for(QString S : O.steps) {
+            out += QString("step == ") + S + QString(") ");
+        }
+        out += O.variable + QString(" = 1;\n");
+        out += QString("\telse ") + O.variable + QString(" = 0;\n");
+    }
+
+    return out;
 }

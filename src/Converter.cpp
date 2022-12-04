@@ -19,11 +19,11 @@ void Converter::exec() {
 void Converter::_convertPou() {
     QString pouName = _xml->attributes().value(QString("name")).toString();
 
-    QFile cppFile = QFile("..\\" + pouName + ".cpp");
+    QFile cppFile = QFile("../" + pouName + ".cpp");
     cppFile.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream* cpp = new QTextStream(&cppFile);
 
-    QFile hppFile = QFile("..\\" + pouName + ".hpp");
+    QFile hppFile = QFile("../" + pouName + ".hpp");
     hppFile.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream* hpp = new QTextStream(&hppFile);
 
@@ -46,25 +46,20 @@ void Converter::_convertPou() {
         SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, pouName);
         sfcConverter.exec();
 
-        *hpp << sfcConverter.enumStates;
+        *hpp << sfcConverter.enumStates
+             << "class " << pouName << " {\n"
+             << "public:\n"
+             << varsConverter.pubVars
+             << "\tvoid autoCycle();\n"
+             << "\tvoid outputAnalysis();\n\n"
+             << "private:\n\tStep step;\n"
+             << "\tvoid changeStep(Step step);\n"
+             << "};\n\n"
+             << Qt::flush;
 
-        *hpp << "class " << pouName << " {\n"
+        *cpp << sfcConverter.autoCycle
+             << sfcConverter.outputAnalysis
              << Qt::flush;
-        *hpp << "public:\n"
-             << Qt::flush;
-        *hpp << varsConverter.pubVars
-             << Qt::flush;
-        *hpp << "\tvoid autoCycle();\n"
-             << Qt::flush;
-        *hpp << "\tvoid writeOutput();\n\n"
-             << Qt::flush;
-        *hpp << "private:\n\tStep step;\n"
-             << Qt::flush;
-        *hpp << "\tvoid changeStep(Step step);\n"
-             << Qt::flush;
-        *hpp << "};\n\n"
-             << Qt::flush;
-        *cpp << sfcConverter.autoCycle;
     }
 
     *hpp << "#endif\n"
