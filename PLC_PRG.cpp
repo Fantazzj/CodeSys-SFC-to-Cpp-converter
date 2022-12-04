@@ -14,3 +14,7 @@ void PLC_PRG::autoCycle() {
 	if(step == Step4 && (trans16)) changeStep(Step11);
 	if(step == Step11 && (trans17)) changeStep(Init);
 }
+void PLC_PRG::outputAnalysis() {
+	if(step == Step0) out0 = 1;
+	else out0 = 0;
+}

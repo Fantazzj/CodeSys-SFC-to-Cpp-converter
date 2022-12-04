@@ -33,7 +33,7 @@ public:
 	bool trans16;
 	bool trans17;
 	void autoCycle();
-	void writeOutput();
+	void outputAnalysis();
 
 private:
 	Step step;
