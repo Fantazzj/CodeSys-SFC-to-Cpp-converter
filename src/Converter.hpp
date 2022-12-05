@@ -9,13 +9,13 @@
 
 class Converter : public GeneralConverter {
 private:
-    QXmlStreamReader* _xml;
-    QFile* _xmlFile;
-    void _convertPou();
+	QXmlStreamReader* _xml;
+	QFile* _xmlFile;
+	void _convertPou();
 
 public:
-    Converter(QXmlStreamReader* xml, QFile* xmlFile);
-    void exec();
+	Converter(QXmlStreamReader* xml, QFile* xmlFile);
+	void exec();
 
 protected:
 };
