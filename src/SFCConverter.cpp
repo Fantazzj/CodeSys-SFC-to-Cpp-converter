@@ -7,13 +7,13 @@ SFCConverter::SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouNam
 
 QString SFCConverter::enumStates() {
 	QString out;
-	QVector<Step> stepsList = _searchSteps();
+	QVector<QString> stepsList = _searchStepsNames();
 	QVector<QString> done;
 	out += QString("enum Step: int {\n");
-	for(Step S: stepsList) {
-		if(!done.contains(S.actual)) {
-			done.append(S.actual);
-			out += QString("\t") + S.actual + QString(",\n");
+	for(QString S: stepsList) {
+		if(!done.contains(S)) {
+			done.append(S);
+			out += QString("\t") + S + QString(",\n");
 		}
 	}
 	out += QString("};\n\n");
@@ -23,7 +23,7 @@ QString SFCConverter::enumStates() {
 QString SFCConverter::autoCycleDef() {
 	QString out;
 	out += QString("void ") + _pouName + QString("::autoCycle() {\n");
-	QVector<Step> stepList = _searchSteps();
+	QVector<Step> stepList = _searchStepsInfo();
 	for(Step S: stepList) {
 		out += QString("\tif(step==") + S.actual + QString(" && ") + S.transition + QString(")");
 		out += QString(" changeStep(") + S.next + QString(");\n");
@@ -32,9 +32,10 @@ QString SFCConverter::autoCycleDef() {
 	return out;
 }
 
-QString SFCConverter::privVars() {
+QString SFCConverter::privateVars() {
 	QString out;
 	out += QString("\tStep step;\n");
+	out += QString("\tunsigned long elapsedMin = 0;\n");
 	return out;
 }
 
@@ -79,10 +80,10 @@ QString SFCConverter::_searchAfterConv() {
 	while(!_isElement("selectionConvergence", QXmlStreamReader::EndElement));
 
 	do _xml->readNext();
-	while(!_isElement("steps") && !_isElement("jumpStep") && !_xml->atEnd());
+	while(!_isElement("step") && !_isElement("jumpStep") && !_xml->atEnd());
 
 	QString name;
-	if(_isElement("steps")) name = _getAttribute("name");
+	if(_isElement("step")) name = _getAttribute("name");
 	else if(_isElement("jumpStep")) name = _getAttribute("targetName");
 
 	_xmlFile->seek(0);
@@ -93,13 +94,14 @@ QString SFCConverter::_searchAfterConv() {
 	return name;
 }
 
-QVector<Step> SFCConverter::_searchSteps() {
+QVector<Step> SFCConverter::_searchStepsInfo() {
 	QVector<Step> stepsList;
 	Step newStep;
 	SFC last;
 	QString lastStep;
 	QVector<QString> divStep;
 	QVector<QString> convStep;
+	QVector<QString> stepsNames = _searchStepsNames();
 
 	while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
 		_xml->readNext();
@@ -111,6 +113,7 @@ QVector<Step> SFCConverter::_searchSteps() {
 				newStep.next = lastStep;
 				stepsList.append(newStep);
 			}
+			//newStep.actual = lastStep;
 			last = StepEl;
 		}
 
@@ -119,6 +122,8 @@ QVector<Step> SFCConverter::_searchSteps() {
 			condition.replace("and", "&&");
 			condition.replace("or", "||");
 			condition.replace("not ", "!");
+			for(QString S: stepsNames)
+				condition.replace(S+QString(".t"), "elapsedMin");
 
 			if(last == Transition) {
 				//_printChangeStep(convStep.last());
@@ -164,11 +169,9 @@ QVector<Step> SFCConverter::_searchSteps() {
 	_backToLine(_startLine);
 
 	/*
-	qDebug() << "STEPS:";
-	for(Step S: stepsList) {
-		qDebug() << S.actual << " " << S.transition << " " << S.next << Qt::flush;
-	}
-    */
+	for(Step S: stepsList)
+		qDebug() << S.actual << S.transition << S.next;
+	*/
 
 	return stepsList;
 }
@@ -199,29 +202,6 @@ QVector<Action> SFCConverter::_searchActions() {
 	return actionsList;
 }
 
-/*
-QString SFCConverter::_getStepName() {
-    return _xml->attributes().value(QString("name")).toString();
-}
-
-QString SFCConverter::_getJumpStepName() {
-    return _xml->attributes().value(QString("targetName")).toString();
-}
-
-QString SFCConverter::_printChangeStep(QString steps) {
-    QString out;
-    if(!steps.isEmpty())
-        out += QString(" changeStep(") + steps + QString(");\n");
-    return out;
-}
-
-QString SFCConverter::_printIf(QString steps, QString condition) {
-    QString out;
-    out += QString("\t") + QString("if(steps == ") + steps + QString(" && (") + condition + QString("))");
-    return out;
-}
-*/
-
 void SFCConverter::_sortActions(QVector<Action>* actionsList) {
 	for(qint64 i = 0; i < actionsList->size() - 1; i++) {
 		qint64 minPos = i;
@@ -231,15 +211,19 @@ void SFCConverter::_sortActions(QVector<Action>* actionsList) {
 		actionsList->swapItemsAt(i, minPos);
 	}
 }
+
 QString SFCConverter::autoCycleDec() {
-	return QString("\tvoid autoCycle();\n");
+	return {"\tvoid autoCycle();\n"};
 }
+
 QString SFCConverter::outputAnalysisDec() {
-	return QString("\tvoid outputAnalysis();\n\n");
+	return {"\tvoid outputAnalysis();\n\n"};
 }
+
 QString SFCConverter::changeStepDec() {
-	return QString("\tvoid changeStep(Step step);\n");
+	return {"\tvoid changeStep(Step step);\n"};
 }
+
 QString SFCConverter::changeStepDef() {
 	QString out;
 
@@ -248,4 +232,18 @@ QString SFCConverter::changeStepDef() {
 	out += QString("}\n");
 
 	return out;
+}
+
+QVector<QString> SFCConverter::_searchStepsNames() {
+	QVector<QString> stepsList;
+
+	while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
+		_xml->readNext();
+		if(_isElement("step"))
+			stepsList.append(_getAttribute("name"));
+	}
+
+	_backToLine(_startLine);
+
+	return stepsList;
 }

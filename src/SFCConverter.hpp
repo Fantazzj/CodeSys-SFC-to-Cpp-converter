@@ -36,22 +36,21 @@ private:
 
 	QString _reachCondition();
 	QString _searchAfterConv();
-	QVector<Step> _searchSteps();
+	QVector<Step> _searchStepsInfo();
+	QVector<QString> _searchStepsNames();
 	QVector<Action> _searchActions();
-	//QString _getStepName();
-	//QString _getJumpStepName();
 	static void _sortActions(QVector<Action>* actionsList);
 
 public:
 	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName);
 	QString enumStates();
 	QString autoCycleDef();
-	QString autoCycleDec();
+	static QString autoCycleDec();
 	QString outputAnalysisDef();
-	QString outputAnalysisDec();
+	static QString outputAnalysisDec();
 	QString changeStepDef();
-	QString changeStepDec();
-	QString privVars();
+	static QString changeStepDec();
+	static QString privateVars();
 };
 
 #endif//CODESYS_SFC_TO_CPP_CONVERTER_SFCCONVERTER_HPP
