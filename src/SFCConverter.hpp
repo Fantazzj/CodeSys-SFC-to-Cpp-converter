@@ -20,7 +20,7 @@ enum SFC {
 class Output {
 public:
     QString variable;
-    QVector<QString> steps;
+    QString step;
 };
 
 class SFCConverter : public GeneralConverter {
@@ -30,7 +30,7 @@ private:
     QVector<QString> _divStep;
     QVector<QString> _convStep;
     SFC _last;
-    QVector<Output> outputs;
+    QVector<Output> _outputs;
 
     QString _reachCondition();
     QString _searchAfterConv();
@@ -40,7 +40,8 @@ private:
     void _printChangeStep(QString step);
     void _printIf(QString step, QString condition);
     void _printEnum(QVector<QString> stepsList);
-    QString _assembleOutputAnalysis(QVector<Output> outputs);
+    QString _assembleOutputAnalysis();
+    void _sortOutputs();
 
 public:
     SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName);

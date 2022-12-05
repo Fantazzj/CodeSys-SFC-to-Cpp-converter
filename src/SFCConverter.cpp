@@ -65,30 +65,20 @@ void SFCConverter::exec() {
             _reachElement("reference");
             QString variable = _getAttribute("name");
 
-            bool exists = false;
-            for(Output O : outputs) {
-                if(O.variable == variable) {
-                    O.steps.append(_step);
-                    exists = true;
-                }
-            }
-            if(!exists) {
-                Output output;
-                output.variable = variable;
-                output.steps.append(_step);
-                outputs.append(output);
-            }
+            Output newOut;
+            newOut.variable = variable;
+            newOut.step = _step;
+
+            _outputs.append(newOut);
 
             _last = Action;
         }
-
     }
 
     autoCycle += QString("}\n");
 
-    outputAnalysis += _assembleOutputAnalysis(outputs);
+    outputAnalysis += _assembleOutputAnalysis(_outputs);
     outputAnalysis += QString("}\n");
-
 }
 
 QString SFCConverter::_reachCondition() {
@@ -161,17 +151,31 @@ void SFCConverter::_printEnum(QVector<QString> stepsList) {
     enumStates += QString("};\n\n");
 }
 
-QString SFCConverter::_assembleOutputAnalysis(QVector<Output> outputs) {
+QString SFCConverter::_assembleOutputAnalysis() {
     QString out;
 
-    for(Output O : outputs) {
-        out += QString("\tif(");
-        for(QString S : O.steps) {
-            out += QString("step == ") + S + QString(") ");
+    _sortOutputs();
+
+    for()
+
+    quint64 vPos;
+    for(quint64 i=0; i<_outputs.size(); i++) {
+        if(i==0) {
+            outputAnalysis += QString("if(step == ") + _outputs.at(i).step;
+            vPos = i;
         }
-        out += O.variable + QString(" = 1;\n");
-        out += QString("\telse ") + O.variable + QString(" = 0;\n");
+        if(_outputs.at(vPos).variable != _outputs.at(i).variable)
     }
 
     return out;
+}
+
+void SFCConverter::_sortOutputs() {
+    for(quint64 i = 0; i < _outputs.size() - 1; i++) {
+        quint64 minPos = i;
+        for(quint64 j = i; j < _outputs.size(); j++) {
+            minPos = j;
+        }
+        _outputs.swapItemsAt(i, minPos);
+    }
 }
