@@ -9,11 +9,12 @@ class GeneralConverter {
 private:
 public:
     GeneralConverter(QXmlStreamReader* xml, QFile* xmlFile);
-    virtual void exec();
+    //virtual void exec();
 
 protected:
     QXmlStreamReader* _xml;
     QFile* _xmlFile;
+    quint64 _startLine;
     void _reachElement(QString name, QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     bool _isElement(QString name, QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);
     QString _getAttribute(QString attribute);

@@ -46,7 +46,8 @@ void Converter::_convertPou() {
         SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, pouName);
         sfcConverter.exec();
 
-        *hpp << sfcConverter.enumStates
+
+        *hpp << sfcConverter.enumStates()
              << "class " << pouName << " {\n"
              << "public:\n"
              << varsConverter.pubVars
@@ -57,9 +58,10 @@ void Converter::_convertPou() {
              << "};\n\n"
              << Qt::flush;
 
-        *cpp << sfcConverter.autoCycle
-             << sfcConverter.outputAnalysis
+        *cpp << sfcConverter.autoCycleDef()
+             //<< sfcConverter.outputAnalysisDef()
              << Qt::flush;
+
     }
 
     *hpp << "#endif\n"

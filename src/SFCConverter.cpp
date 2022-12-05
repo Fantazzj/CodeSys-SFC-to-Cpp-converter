@@ -6,79 +6,66 @@ SFCConverter::SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouNam
 }
 
 void SFCConverter::exec() {
-    QVector<QString> stepsList;
-    stepsList = _searchSteps();
+    _searchSteps();
+}
 
-    _printEnum(stepsList);
-
-    privVars += QString("Step step;\n");
-
-    autoCycle += QString("void ") + _pouName + QString("::autoCycle() {\n");
-
-    outputAnalysis += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
-
-    while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
-        _xml->readNext();
-
-        if(_isElement("step")) {
-            _step = _getStepName();
-            if(_getAttribute("initialStep") != "true") _printChangeStep(_step);
-            _last = Step;
-        }
-
-        else if(_isElement("inVariable")) {
-            QString condition = _reachCondition();
-            condition.replace("and", "&&");
-            condition.replace("or", "||");
-
-            if(_last == Transition) {
-                _printChangeStep(_convStep.last());
-                _printIf(_divStep.last(), condition);
-            } else if(_last == Jump) {
-                _printIf(_divStep.last(), condition);
-            } else {
-                _printIf(_step, condition);
-            }
-
-            _last = Transition;
-        }
-
-        else if(_isElement("jumpStep")) {
-            QString name = _getJumpStepName();
-            _printChangeStep(name);
-            _last = Jump;
-        }
-
-        else if(_isElement("selectionDivergence")) {
-            _divStep.append(_step);
-            _convStep.append(_searchAfterConv());
-            _last = Divergence;
-        }
-
-        else if(_isElement("selectionConvergence")) {
-            _divStep.removeLast();
-            _convStep.removeLast();
-            _last = Convergence;
-        }
-
-        else if(_isElement("actionBlock")) {
-            _reachElement("reference");
-            QString variable = _getAttribute("name");
-
-            Output newOut;
-            newOut.variable = variable;
-            newOut.step = _step;
-
-            _outputs.append(newOut);
-
-            _last = Action;
+QString SFCConverter::enumStates() {
+    QString out;
+    QVector<Step> stepsList = _searchSteps();
+    QVector<QString> done;
+    out += QString("enum Step: int {\n");
+    for(Step S: stepsList) {
+        if(!done.contains(S.actual)) {
+            done.append(S.actual);
+            out += QString("\t") + S.actual + QString(",\n");
         }
     }
+    out += QString("};\n\n");
+    return out;
+}
 
-    autoCycle += QString("}\n");
+QString SFCConverter::autoCycleDef() {
+    QString out;
+    out += QString("void ") + _pouName + QString("::autoCycle() {\n");
+    QVector<Step> stepList = _searchSteps();
+    for(Step S: stepList) {
+        out += QString("\tif(step==") + S.actual + QString(" && ") + S.transition + QString(")");
+        out += QString(" changeStep(") + S.next + QString(");\n");
+    }
+    out += QString("}\n");
+    return out;
+}
 
-    outputAnalysis += _assembleOutputAnalysis();
-    outputAnalysis += QString("}\n");
+QString SFCConverter::privVars() {
+    QString out;
+    out += QString("Step step;\n");
+    return out;
+}
+
+QString SFCConverter::outputAnalysisDef() {
+    QString out;
+
+    QVector<Actions> actionsList = _searchActions();
+    _sortActions(&actionsList);
+
+    out += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
+    for(quint64 i = 0, vPos = i; i < actionsList.size(); i++) {
+        if(actionsList.at(vPos).variable != actionsList.at(i).variable || i == 0) {
+            if(i != 0) {
+                out += QString(") ") + actionsList.at(vPos).variable + QString(" = 1;\n\telse ") + actionsList.at(vPos).variable + QString(" = 0;\n");
+            }
+            out += QString("\tif(step == ") + actionsList.at(i).step;
+            vPos = i;
+        } else {
+            out += QString(" || step == ") + actionsList.at(i).step;
+        }
+        if(i == actionsList.size() - 1) {
+            out += QString(") ") + actionsList.at(vPos).variable + QString(" = 1;\n\telse ") + actionsList.at(vPos).variable + QString(" = 0;\n");
+        }
+    }
+    out += QString("}\n");
+
+    return out;
 }
 
 QString SFCConverter::_reachCondition() {
@@ -110,22 +97,103 @@ QString SFCConverter::_searchAfterConv() {
     return name;
 }
 
-QVector<QString> SFCConverter::_searchSteps() {
-    QVector<QString> stepsList;
-
-    qint64 startLine = _xml->lineNumber();
+QVector<Step> SFCConverter::_searchSteps() {
+    QVector<Step> stepsList;
+    Step newStep;
+    SFC last;
+    QString lastStep;
+    QVector<QString> divStep;
+    QVector<QString> convStep;
 
     while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
         _xml->readNext();
+
         if(_isElement("step")) {
-            QString step = _getStepName();
-            if(!stepsList.contains(step)) stepsList.append(step);
+            lastStep = _getStepName();
+            if(_getAttribute("initialStep") != "true") {
+                //_printChangeStep(lastStep);
+                newStep.next = lastStep;
+                stepsList.append(newStep);
+            }
+            last = StepEl;
+        }
+
+        else if(_isElement("inVariable")) {
+            QString condition = _reachCondition();
+            condition.replace("and", "&&");
+            condition.replace("or", "||");
+            condition.replace("not ", "!");
+
+            if(last == Transition) {
+                //_printChangeStep(convStep.last());
+                newStep.next = convStep.last();
+                stepsList.append(newStep);
+                //_printIf(divStep.last(), condition);
+                newStep.actual = divStep.last();
+                newStep.transition = condition;
+            } else if(last == Jump) {
+                //_printIf(divStep.last(), condition);
+                newStep.actual = divStep.last();
+                newStep.transition = condition;
+            } else {
+                //_printIf(lastStep, condition);
+                newStep.actual = lastStep;
+                newStep.transition = condition;
+            }
+
+            last = Transition;
+        }
+
+        else if(_isElement("jumpStep")) {
+            QString name = _getJumpStepName();
+            //_printChangeStep(name);
+            newStep.next = name;
+            stepsList.append(newStep);
+            last = Jump;
+        }
+
+        else if(_isElement("selectionDivergence")) {
+            divStep.append(lastStep);
+            convStep.append(_searchAfterConv());
+            last = Divergence;
+        }
+
+        else if(_isElement("selectionConvergence")) {
+            divStep.removeLast();
+            convStep.removeLast();
+            last = Convergence;
         }
     }
 
-    _backToLine(startLine + 1);
+    _backToLine(_startLine);
+
+    qDebug() << "STEPS:";
+    for(Step S: stepsList) {
+        qDebug() << S.actual << " " << S.transition << " " << S.next << Qt::flush;
+    }
 
     return stepsList;
+}
+
+QVector<Actions> SFCConverter::_searchActions() {
+    QVector<Actions> actionsList;
+    QString lastStep;
+    SFC last;
+
+    while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
+        _xml->readNext();
+
+        if(_isElement("step")) {
+            lastStep = _getStepName();
+            last = StepEl;
+        }
+
+        else if(_isElement("actionBlock")) {
+            last = Action;
+        }
+    }
+
+    return actionsList;
 }
 
 QString SFCConverter::_getStepName() {
@@ -136,50 +204,27 @@ QString SFCConverter::_getJumpStepName() {
     return _xml->attributes().value(QString("targetName")).toString();
 }
 
-void SFCConverter::_printChangeStep(QString step) {
-    if(!step.isEmpty())
-        autoCycle += QString(" changeStep(") + step + QString(");\n");
-}
-
-void SFCConverter::_printIf(QString step, QString condition) {
-    autoCycle += QString("\t") + QString("if(step == ") + step + QString(" && (") + condition + QString("))");
-}
-
-void SFCConverter::_printEnum(QVector<QString> stepsList) {
-    enumStates += QString("enum Step: int {\n");
-    for(QString S: stepsList) enumStates += QString("\t") + S + QString(",\n");
-    enumStates += QString("};\n\n");
-}
-
-QString SFCConverter::_assembleOutputAnalysis() {
+/*
+QString SFCConverter::_printChangeStep(QString step) {
     QString out;
-
-    _sortOutputs();
-
-    for(quint64 i = 0, vPos = i; i < _outputs.size(); i++) {
-        if(_outputs.at(vPos).variable != _outputs.at(i).variable || i == 0) {
-            if(i != 0) {
-                outputAnalysis += QString(") ") + _outputs.at(vPos).variable + QString(" = 1;\n\telse ") + _outputs.at(vPos).variable + QString(" = 0;\n");
-            }
-            outputAnalysis += QString("\tif(step == ") + _outputs.at(i).step;
-            vPos = i;
-        } else {
-            outputAnalysis += QString(" || step == ") + _outputs.at(i).step;
-        }
-        if(i==_outputs.size()-1) {
-            outputAnalysis += QString(") ") + _outputs.at(vPos).variable + QString(" = 1;\n\telse ") + _outputs.at(vPos).variable + QString(" = 0;\n");
-        }
-    }
-
+    if(!step.isEmpty())
+        out += QString(" changeStep(") + step + QString(");\n");
     return out;
 }
 
-void SFCConverter::_sortOutputs() {
-    for(quint64 i = 0; i < _outputs.size() - 1; i++) {
+QString SFCConverter::_printIf(QString step, QString condition) {
+    QString out;
+    out += QString("\t") + QString("if(step == ") + step + QString(" && (") + condition + QString("))");
+    return out;
+}
+*/
+
+void SFCConverter::_sortActions(QVector<Actions>* actionsList) {
+    for(quint64 i = 0; i < actionsList->size() - 1; i++) {
         quint64 minPos = i;
-        for(quint64 j = i; j < _outputs.size(); j++) {
+        for(quint64 j = i; j < actionsList->size(); j++) {
             minPos = j;
         }
-        _outputs.swapItemsAt(i, minPos);
+        actionsList->swapItemsAt(i, minPos);
     }
 }
