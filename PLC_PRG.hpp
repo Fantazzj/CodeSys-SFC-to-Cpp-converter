@@ -14,6 +14,9 @@ enum Step: int {
 
 class PLC_PRG {
 public:
+	void autoCycle();
+	void outputAnalysis();
+
 	bool trans0;
 	bool trans1;
 	bool trans2;
@@ -32,11 +35,10 @@ public:
 	bool trans14;
 	bool trans16;
 	bool trans17;
-	void autoCycle();
-	void outputAnalysis();
-
+	bool out2;
 private:
 	Step step;
+	unsigned long elapsedMin = 0;
 	void changeStep(Step step);
 };
 
