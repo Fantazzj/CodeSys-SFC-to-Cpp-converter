@@ -77,7 +77,7 @@ void SFCConverter::exec() {
 
     autoCycle += QString("}\n");
 
-    outputAnalysis += _assembleOutputAnalysis(_outputs);
+    outputAnalysis += _assembleOutputAnalysis();
     outputAnalysis += QString("}\n");
 }
 
@@ -156,15 +156,19 @@ QString SFCConverter::_assembleOutputAnalysis() {
 
     _sortOutputs();
 
-    for()
-
-    quint64 vPos;
-    for(quint64 i=0; i<_outputs.size(); i++) {
-        if(i==0) {
-            outputAnalysis += QString("if(step == ") + _outputs.at(i).step;
+    for(quint64 i = 0, vPos = i; i < _outputs.size(); i++) {
+        if(_outputs.at(vPos).variable != _outputs.at(i).variable || i == 0) {
+            if(i != 0) {
+                outputAnalysis += QString(") ") + _outputs.at(vPos).variable + QString(" = 1;\n\telse ") + _outputs.at(vPos).variable + QString(" = 0;\n");
+            }
+            outputAnalysis += QString("\tif(step == ") + _outputs.at(i).step;
             vPos = i;
+        } else {
+            outputAnalysis += QString(" || step == ") + _outputs.at(i).step;
         }
-        if(_outputs.at(vPos).variable != _outputs.at(i).variable)
+        if(i==_outputs.size()-1) {
+            outputAnalysis += QString(") ") + _outputs.at(vPos).variable + QString(" = 1;\n\telse ") + _outputs.at(vPos).variable + QString(" = 0;\n");
+        }
     }
 
     return out;
