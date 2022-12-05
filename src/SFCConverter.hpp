@@ -11,13 +11,13 @@
 enum SFC {
     StepEl,
     Transition,
-    Action,
+    ActionEl,
     Jump,
     Convergence,
     Divergence
 };
 
-class Actions {
+class Action {
 public:
     QString variable;
     QString step;
@@ -37,17 +37,19 @@ private:
     QString _reachCondition();
     QString _searchAfterConv();
     QVector<Step> _searchSteps();
-    QVector<Actions> _searchActions();
-    QString _getStepName();
-    QString _getJumpStepName();
-    void _sortActions(QVector<Actions>* actionsList);
+    QVector<Action> _searchActions();
+    //QString _getStepName();
+    //QString _getJumpStepName();
+    static void _sortActions(QVector<Action>* actionsList);
 
 public:
     SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName);
     void exec();
     QString enumStates();
     QString autoCycleDef();
+    QString autoCycleDec();
     QString outputAnalysisDef();
+    QString outputAnalysisDec();
     QString privVars();
 };
 

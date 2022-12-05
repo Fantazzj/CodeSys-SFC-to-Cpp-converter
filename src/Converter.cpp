@@ -59,7 +59,7 @@ void Converter::_convertPou() {
              << Qt::flush;
 
         *cpp << sfcConverter.autoCycleDef()
-             //<< sfcConverter.outputAnalysisDef()
+             << sfcConverter.outputAnalysisDef()
              << Qt::flush;
 
     }
