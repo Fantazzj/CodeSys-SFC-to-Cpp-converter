@@ -19,12 +19,12 @@ bool GeneralConverter::_isElement(QString name, QXmlStreamReader::TokenType toke
     return _xml->name() == name && _xml->tokenType() == tokenType;
 }
 
-void GeneralConverter::_goToLine(qint64 line) {
+void GeneralConverter::_goToLine(quint64 line) {
     do _xml->readNext();
     while(_xml->lineNumber() != line);
 }
 
-void GeneralConverter::_backToLine(qint64 line) {
+void GeneralConverter::_backToLine(quint64 line) {
     _xmlFile->seek(0);
     _xml->setDevice(_xmlFile);
     do _xml->readNext();
