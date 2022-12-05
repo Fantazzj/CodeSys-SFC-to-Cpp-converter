@@ -34,7 +34,7 @@ QString SFCConverter::autoCycleDef() {
 
 QString SFCConverter::privVars() {
 	QString out;
-	out += QString("Step step;\n");
+	out += QString("\tStep step;\n");
 	return out;
 }
 
@@ -163,10 +163,12 @@ QVector<Step> SFCConverter::_searchSteps() {
 
 	_backToLine(_startLine);
 
+	/*
 	qDebug() << "STEPS:";
 	for(Step S: stepsList) {
 		qDebug() << S.actual << " " << S.transition << " " << S.next << Qt::flush;
 	}
+    */
 
 	return stepsList;
 }
@@ -228,4 +230,22 @@ void SFCConverter::_sortActions(QVector<Action>* actionsList) {
 		}
 		actionsList->swapItemsAt(i, minPos);
 	}
+}
+QString SFCConverter::autoCycleDec() {
+	return QString("\tvoid autoCycle();\n");
+}
+QString SFCConverter::outputAnalysisDec() {
+	return QString("\tvoid outputAnalysis();\n\n");
+}
+QString SFCConverter::changeStepDec() {
+	return QString("\tvoid changeStep(Step step);\n");
+}
+QString SFCConverter::changeStepDef() {
+	QString out;
+
+	out += QString("void ") + _pouName + QString("::changeStep(Step step){\n");
+	out += QString("\tthis->step = step;\n");
+	out += QString("}\n");
+
+	return out;
 }

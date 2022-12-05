@@ -44,12 +44,13 @@ private:
 
 public:
 	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName);
-	void exec();
 	QString enumStates();
 	QString autoCycleDef();
 	QString autoCycleDec();
 	QString outputAnalysisDef();
 	QString outputAnalysisDec();
+	QString changeStepDef();
+	QString changeStepDec();
 	QString privVars();
 };
 

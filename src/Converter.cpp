@@ -44,22 +44,22 @@ void Converter::_convertPou() {
 
 	if(_xml->name() == QString("SFC")) {
 		SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, pouName);
-		sfcConverter.exec();
-
 
 		*hpp << sfcConverter.enumStates()
 			 << "class " << pouName << " {\n"
 			 << "public:\n"
+			 << sfcConverter.autoCycleDec()
+			 << sfcConverter.outputAnalysisDec()
 			 << varsConverter.pubVars
-			 << "\tvoid autoCycle();\n"
-			 << "\tvoid outputAnalysis();\n\n"
-			 << "private:\n\tStep step;\n"
-			 << "\tvoid changeStep(Step step);\n"
+			 << "private:\n"
+			 << sfcConverter.privVars()
+			 << sfcConverter.changeStepDec()
 			 << "};\n\n"
 			 << Qt::flush;
 
 		*cpp << sfcConverter.autoCycleDef()
 			 << sfcConverter.outputAnalysisDef()
+			 << sfcConverter.changeStepDef()
 			 << Qt::flush;
 	}
 
