@@ -217,7 +217,7 @@ QString SFCConverter::autoCycleDec() {
 }
 
 QString SFCConverter::outputAnalysisDec() {
-	return {"\tvoid outputAnalysis();\n\n"};
+	return {"\tvoid outputAnalysis();\n"};
 }
 
 QString SFCConverter::changeStepDec() {

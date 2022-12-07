@@ -28,9 +28,11 @@ void Converter::_convertPou() {
 	QTextStream* hpp = new QTextStream(&hppFile);
 
 	*hpp << "#ifndef " << pouName.toUpper() << "_HPP\n"
-		 << "#define " << pouName.toUpper() << "_HPP\n\n"
+		 << "#define " << pouName.toUpper() << "_HPP\n"
+		 << "\n"
 		 << Qt::flush;
-	*cpp << "#include \"" << pouName.toUpper() << ".hpp\"\n\n"
+	*cpp << "#include \"" << pouName.toUpper() << ".hpp\"\n"
+		 << "\n"
 		 << Qt::flush;
 
 	VarsConverter varsConverter = VarsConverter(_xml, _xmlFile);
