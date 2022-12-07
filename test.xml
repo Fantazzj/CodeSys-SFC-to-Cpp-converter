@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2022-12-05T17:17:50.3617369" />
-  <contentHeader name="test.project" modificationDateTime="2022-12-04T20:57:24.366622">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2022-12-07T18:05:35.4554155" />
+  <contentHeader name="test.project" modificationDateTime="2022-12-07T18:05:25.6971539">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -119,6 +119,22 @@
               <type>
                 <BOOL />
               </type>
+            </variable>
+            <variable name="T1">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="TIME#360m0s0ms" />
+              </initialValue>
+            </variable>
+            <variable name="T2">
+              <type>
+                <TIME />
+              </type>
+              <initialValue>
+                <simpleValue value="TIME#4m0s0ms" />
+              </initialValue>
             </variable>
           </localVars>
         </interface>
@@ -242,7 +258,7 @@
             <inVariable localId="8">
               <position x="0" y="0" />
               <connectionPointOut />
-              <expression>trans4</expression>
+              <expression>T1 &gt; T#7S</expression>
             </inVariable>
             <transition localId="9">
               <position x="0" y="0" />
@@ -257,7 +273,7 @@
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
                   <attributes xmlns="">
-                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">trans4</attribute>
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">T1 &gt; T#7S</attribute>
                     <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
                     <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
                     <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
@@ -314,7 +330,7 @@
             <inVariable localId="13">
               <position x="0" y="0" />
               <connectionPointOut />
-              <expression>trans9</expression>
+              <expression>T2 &gt; T#9H</expression>
             </inVariable>
             <transition localId="14">
               <position x="0" y="0" />
@@ -329,7 +345,7 @@
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
                   <attributes xmlns="">
-                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">trans9</attribute>
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">T2 &gt; T#9H</attribute>
                     <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
                     <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
                     <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
@@ -388,7 +404,7 @@
             <inVariable localId="18">
               <position x="0" y="0" />
               <connectionPointOut />
-              <expression>trans10</expression>
+              <expression>Step4.t &gt; T2</expression>
             </inVariable>
             <transition localId="19">
               <position x="0" y="0" />
@@ -403,7 +419,7 @@
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
                   <attributes xmlns="">
-                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">trans10</attribute>
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">Step4.t &gt; T2</attribute>
                     <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
                     <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
                     <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
