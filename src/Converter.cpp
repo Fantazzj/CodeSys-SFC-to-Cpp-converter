@@ -34,7 +34,7 @@ void Converter::_convertPou() {
 		 << Qt::flush;
 
 	VarsConverter varsConverter = VarsConverter(_xml, _xmlFile);
-	varsConverter.exec();
+	QString publicVars = varsConverter.publicVars();
 
 	_reachElement("body");
 	_xml->readNextStartElement();
@@ -47,7 +47,7 @@ void Converter::_convertPou() {
 			 << "public:\n"
 			 << SFCConverter::autoCycleDec()
 			 << SFCConverter::outputAnalysisDec()
-			 << varsConverter.pubVars
+			 << publicVars
 			 << "private:\n"
 			 << SFCConverter::privateVars()
 			 << SFCConverter::changeStepDec()
