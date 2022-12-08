@@ -36,7 +36,29 @@ QString GeneralConverter::_getAttribute(QString attribute) {
 }
 
 void GeneralConverter::_convertTime(QString* time) {
-
+	time->remove("TIME#");
+	time->remove("T#");
+	time->remove("t#");
+	time->remove("time#");
+	qint64 tot = 0;
+	for(qint64 i = 0, nPos = 0; i < time->length(); i++) {
+		if(time->at(i).isLetter()) {
+			qint64 val = time->sliced(nPos, i - nPos).toUInt();
+			switch(time->at(i).unicode()) {
+				case 'd':
+					val = val * 24;
+				case 'h':
+					val = val * 60;
+				case 'm':
+					val = val * 60;
+				case 's':
+					val = val * 1000;
+			}
+			tot += val;
+			nPos = i + 1;
+		}
+	}
+	*time = QString::number(tot);
 }
 
 void GeneralConverter::_convertType(QString* type) {
