@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QXmlStreamReader>
+#include <QRegularExpression>
 
 class GeneralConverter {
 private:
@@ -20,7 +21,7 @@ protected:
 	QString _getAttribute(QString attribute);
 	void _backToLine(quint64 line);
 	void _goToLine(quint64 line);
-	void _convertTime(QString* time);
+	QString _convertTime(QString* time);
 	void _convertType(QString* type);
 };
 

@@ -23,6 +23,7 @@ QString SFCConverter::enumStates() {
 QString SFCConverter::autoCycleDef() {
 	QString out;
 	out += QString("void ") + _pouName + QString("::autoCycle() {\n");
+	out += QString("\tpreviousMillis = millis() - previousMillis;\n");
 	QVector<Step> stepList = _searchStepsInfo();
 	for(Step S: stepList) {
 		out += QString("\tif(step==") + S.actual + QString(" && ") + S.transition + QString(")");
@@ -35,7 +36,8 @@ QString SFCConverter::autoCycleDef() {
 QString SFCConverter::privateVars() {
 	QString out;
 	out += QString("\tStep step;\n");
-	out += QString("\tunsigned long elapsedMin = 0;\n");
+	out += QString("\tunsigned long elapsedMillis = 0;\n");
+	out += QString("\tunsigned long previousMillis = 0;\n");
 	return out;
 }
 
@@ -109,11 +111,9 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 		if(_isElement("step")) {
 			lastStep = _getAttribute("name");
 			if(_getAttribute("initialStep") != "true") {
-				//_printChangeStep(lastStep);
 				newStep.next = lastStep;
 				stepsList.append(newStep);
 			}
-			//newStep.actual = lastStep;
 			last = StepEl;
 		}
 
@@ -122,22 +122,19 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 			condition.replace("and", "&&");
 			condition.replace("or", "||");
 			condition.replace("not ", "!");
+			_convertTime(&condition);
 			for(QString S: stepsNames)
-				condition.replace(S+QString(".t"), "elapsedMin");
+				condition.replace(S+QString(".t"), "elapsedMillis");
 
 			if(last == Transition) {
-				//_printChangeStep(convStep.last());
 				newStep.next = convStep.last();
 				stepsList.append(newStep);
-				//_printIf(divStep.last(), condition);
 				newStep.actual = divStep.last();
 				newStep.transition = condition;
 			} else if(last == Jump) {
-				//_printIf(divStep.last(), condition);
 				newStep.actual = divStep.last();
 				newStep.transition = condition;
 			} else {
-				//_printIf(lastStep, condition);
 				newStep.actual = lastStep;
 				newStep.transition = condition;
 			}
@@ -147,7 +144,6 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 
 		else if(_isElement("jumpStep")) {
 			QString name = _getAttribute("targetName");
-			//_printChangeStep(name);
 			newStep.next = name;
 			stepsList.append(newStep);
 			last = Jump;
@@ -167,11 +163,6 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 	}
 
 	_backToLine(_startLine);
-
-	/*
-	for(Step S: stepsList)
-		qDebug() << S.actual << S.transition << S.next;
-	*/
 
 	return stepsList;
 }
@@ -229,7 +220,9 @@ QString SFCConverter::changeStepDef() {
 
 	out += QString("void ") + _pouName + QString("::changeStep(Step step){\n");
 	out += QString("\tthis->step = step;\n");
-	out += QString("}\n");
+	out += QString("\telapsedMillis = 0;\n");
+	out += QString("\tpreviousMillis = millis();\n");
+		out += QString("}\n");
 
 	return out;
 }

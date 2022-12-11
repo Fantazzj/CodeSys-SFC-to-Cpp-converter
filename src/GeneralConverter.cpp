@@ -6,8 +6,6 @@ GeneralConverter::GeneralConverter(QXmlStreamReader* xml, QFile* xmlFile) {
 	_startLine = xml->lineNumber();
 }
 
-//void GeneralConverter::exec() {}
-
 void GeneralConverter::_reachElement(QString name, QXmlStreamReader::TokenType tokenType) {
 	while(!_xml->isEndDocument() && (_xml->name() != name || _xml->tokenType() != tokenType)) {
 		if(tokenType == QXmlStreamReader::StartElement) _xml->readNextStartElement();
@@ -35,16 +33,19 @@ QString GeneralConverter::_getAttribute(QString attribute) {
 	return _xml->attributes().value(attribute).toString();
 }
 
-void GeneralConverter::_convertTime(QString* time) {
-	time->remove("TIME#");
-	time->remove("T#");
-	time->remove("t#");
-	time->remove("time#");
+QString GeneralConverter::_convertTime(QString* time) {
+	QRegularExpression reg = QRegularExpression(R"((TIME|T|t|time)#(\d+d)?(\d+h)?(\d+m)?(\d+s)?(\d+ms)?)",QRegularExpression::CaseInsensitiveOption);
+	QRegularExpressionMatch match = reg.match(*time);
+	QString value = match.captured();
+
+	value = value.toLower();
+	value.remove("t#");
+	value.remove("time#");
 	qint64 tot = 0;
-	for(qint64 i = 0, nPos = 0; i < time->length(); i++) {
-		if(time->at(i).isLetter()) {
-			qint64 val = time->sliced(nPos, i - nPos).toUInt();
-			switch(time->at(i).unicode()) {
+	for(qint64 i = 0, nPos = 0; i < value.length(); i++) {
+		if(value.at(i).isLetter()) {
+			qint64 val = value.sliced(nPos, i - nPos).toUInt();
+			switch(value.at(i).unicode()) {
 				case 'd':
 					val = val * 24;
 				case 'h':
@@ -58,7 +59,8 @@ void GeneralConverter::_convertTime(QString* time) {
 			nPos = i + 1;
 		}
 	}
-	*time = QString::number(tot);
+	time->replace(reg, QString::number(tot));
+	return value;
 }
 
 void GeneralConverter::_convertType(QString* type) {
