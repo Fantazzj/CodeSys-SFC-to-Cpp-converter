@@ -1,6 +1,8 @@
 #ifndef PLC_PRG_HPP
 #define PLC_PRG_HPP
 
+#include "Timer.hpp"
+
 enum Step: int {
 	Init,
 	Step0,
@@ -16,7 +18,6 @@ class PLC_PRG {
 public:
 	void autoCycle();
 	void outputAnalysis();
-
 	bool trans0;
 	bool trans1;
 	bool trans2;
@@ -36,9 +37,12 @@ public:
 	bool trans16;
 	bool trans17;
 	bool out2;
+	unsigned long long T1 = 21600000;
+	unsigned long long T2 = 240000s;
 private:
 	Step step;
-	unsigned long elapsedMin = 0;
+	unsigned long elapsedMillis = 0;
+	unsigned long previousMillis = 0;
 	void changeStep(Step step);
 };
 

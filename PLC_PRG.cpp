@@ -1,11 +1,12 @@
 #include "PLC_PRG.hpp"
 
 void PLC_PRG::autoCycle() {
+	elapsedMillis = Timer::milliseconds() - previousMillis;
 	if(step==Init && trans0) changeStep(Step0);
-	if(step==Step0 && trans4) changeStep(Step4);
+	if(step==Step0 && T1 > 7000) changeStep(Step4);
 	if(step==Init && trans7) changeStep(Step7);
-	if(step==Step7 && trans9) changeStep(Step4);
-	if(step==Step4 && trans10) changeStep(Step8);
+	if(step==Step7 && T2 > 32400000) changeStep(Step4);
+	if(step==Step4 && elapsedMillis > T2) changeStep(Step8);
 	if(step==Step8 && trans11) changeStep(Step0);
 	if(step==Step4 && trans12) changeStep(Step9);
 	if(step==Step9 && trans13) changeStep(Step7);
@@ -22,4 +23,6 @@ void PLC_PRG::outputAnalysis() {
 }
 void PLC_PRG::changeStep(Step step){
 	this->step = step;
+	elapsedMillis = 0;
+	previousMillis = Timer::milliseconds();
 }
