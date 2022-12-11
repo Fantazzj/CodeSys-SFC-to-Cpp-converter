@@ -23,13 +23,10 @@ public:
 class VarsConverter : public GeneralConverter {
 private:
 	QVector<Variable> _searchVariables();
-	//void _printVariables(QVector<Variable> variablesList);
 
 public:
 	VarsConverter(QXmlStreamReader* xml, QFile* xmlFile);
-	//void exec();
 	QString publicVars();
-	//QString pubVars;
 };
 
 #endif//CODESYS_SFC_TO_CPP_CONVERTER_VARSCONVERTER_HPP
