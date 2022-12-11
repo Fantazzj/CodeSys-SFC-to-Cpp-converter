@@ -23,7 +23,7 @@ QString SFCConverter::enumStates() {
 QString SFCConverter::autoCycleDef() {
 	QString out;
 	out += QString("void ") + _pouName + QString("::autoCycle() {\n");
-	out += QString("\tpreviousMillis = millis() - previousMillis;\n");
+	out += QString("\telapsedMillis = Timer::milliseconds() - previousMillis;\n");
 	QVector<Step> stepList = _searchStepsInfo();
 	for(Step S: stepList) {
 		out += QString("\tif(step==") + S.actual + QString(" && ") + S.transition + QString(")");
@@ -221,7 +221,7 @@ QString SFCConverter::changeStepDef() {
 	out += QString("void ") + _pouName + QString("::changeStep(Step step){\n");
 	out += QString("\tthis->step = step;\n");
 	out += QString("\telapsedMillis = 0;\n");
-	out += QString("\tpreviousMillis = millis();\n");
+	out += QString("\tpreviousMillis = Timer::milliseconds();\n");
 		out += QString("}\n");
 
 	return out;
