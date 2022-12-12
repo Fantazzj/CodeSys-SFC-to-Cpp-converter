@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2022-12-12T16:05:58.4584091" />
-  <contentHeader name="test.project" modificationDateTime="2022-12-11T15:19:40.4611705">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2022-12-12T17:08:57.2894218" />
+  <contentHeader name="test.project" modificationDateTime="2022-12-12T17:08:32.9412574">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
