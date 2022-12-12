@@ -3,7 +3,7 @@
 void PLC_PRG::autoCycle() {
 	elapsedMillis = Timer::milliseconds() - previousMillis;
 	if(step==Init && trans0) changeStep(Step0);
-	if(step==Step0 && T1 > 7000) changeStep(Step4);
+	if(step==Step0 && T1 > 7000 || T1 > 8000) changeStep(Step4);
 	if(step==Init && trans7) changeStep(Step7);
 	if(step==Step7 && T2 > 32400000) changeStep(Step4);
 	if(step==Step4 && elapsedMillis > T2) changeStep(Step8);

@@ -38,7 +38,7 @@ public:
 	bool trans17;
 	bool out2;
 	unsigned long long T1 = 21600000;
-	unsigned long long T2 = 240000s;
+	unsigned long long T2 = 4;
 private:
 	Step step;
 	unsigned long elapsedMillis = 0;
