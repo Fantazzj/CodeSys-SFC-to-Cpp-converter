@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2022-12-11T15:18:15.1567655" />
-  <contentHeader name="test.project" modificationDateTime="2022-12-07T18:05:25.6971539">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2022-12-12T16:05:58.4584091" />
+  <contentHeader name="test.project" modificationDateTime="2022-12-11T15:19:40.4611705">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -258,7 +258,7 @@
             <inVariable localId="8">
               <position x="0" y="0" />
               <connectionPointOut />
-              <expression>T1 &gt; T#7S</expression>
+              <expression>T1 &gt; T#7S or T1 &gt; T#8S</expression>
             </inVariable>
             <transition localId="9">
               <position x="0" y="0" />
@@ -273,7 +273,7 @@
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
                   <attributes xmlns="">
-                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">T1 &gt; T#7S</attribute>
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">T1 &gt; T#7S or T1 &gt; T#8S</attribute>
                     <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
                     <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
                     <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
