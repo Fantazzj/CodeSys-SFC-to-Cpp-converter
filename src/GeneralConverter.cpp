@@ -33,34 +33,37 @@ QString GeneralConverter::_getAttribute(QString attribute) {
 	return _xml->attributes().value(attribute).toString();
 }
 
-QString GeneralConverter::_convertTime(QString* time) {
-	QRegularExpression reg = QRegularExpression(R"((TIME|T|t|time)#(\d+d)?(\d+h)?(\d+m)?(\d+s)?(\d+ms)?)",QRegularExpression::CaseInsensitiveOption);
-	QRegularExpressionMatch match = reg.match(*time);
-	QString value = match.captured();
+QStringList GeneralConverter::_convertTime(QString* time) {
+	QRegularExpression reg = QRegularExpression(R"((TIME|T|t|time)#(\d+d)?(\d+h)?(\d+ms*)?(\d+s)?(\d+ms)?)", QRegularExpression::CaseInsensitiveOption);
+	QRegularExpressionMatchIterator j = reg.globalMatch(*time);
+	QStringList valueList;
 
-	value = value.toLower();
-	value.remove("t#");
-	value.remove("time#");
-	qint64 tot = 0;
-	for(qint64 i = 0, nPos = 0; i < value.length(); i++) {
-		if(value.at(i).isLetter()) {
-			qint64 val = value.sliced(nPos, i - nPos).toUInt();
-			switch(value.at(i).unicode()) {
-				case 'd':
-					val = val * 24;
-				case 'h':
-					val = val * 60;
-				case 'm':
-					val = val * 60;
-				case 's':
-					val = val * 1000;
+	while(j.hasNext()) {
+		QRegularExpressionMatch match = j.next();
+		QString value = match.captured();
+		valueList.append(value);
+
+		//qDebug() << *time << value;
+
+		value = value.toLower();
+		value.remove("t#");
+		value.remove("time#");
+		qint64 tot = 0;
+		for(qint64 i = 0, nPos = 0; i < value.length(); i++) {
+			if(value.at(i).isLetter()) {
+				qint64 val = value.sliced(nPos, i - nPos).toUInt();
+				if(value.at(i) == 'd') val = val * 24 * 60 * 60 * 1000;
+				if(value.at(i) == 'h') val = val * 60 * 60 * 1000;
+				if(value.at(i) == 'm' && value.at(i + 1) != 's') val = val * 60 * 1000;
+				if(value.at(i) == 's') val = val * 1000;
+				tot += val;
+				nPos = i + 1;
 			}
-			tot += val;
-			nPos = i + 1;
 		}
+		time->replace(match.captured(), QString::number(tot));
 	}
-	time->replace(reg, QString::number(tot));
-	return value;
+
+	return valueList;
 }
 
 void GeneralConverter::_convertType(QString* type) {

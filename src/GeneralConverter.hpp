@@ -21,7 +21,7 @@ protected:
 	QString _getAttribute(QString attribute);
 	void _backToLine(quint64 line);
 	void _goToLine(quint64 line);
-	QString _convertTime(QString* time);
+	QStringList _convertTime(QString* time);
 	void _convertType(QString* type);
 };
 
