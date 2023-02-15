@@ -1,7 +1,7 @@
 #include "SFCConverter.hpp"
 
-SFCConverter::SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName) :
-	GeneralConverter(xml, xmlFile) {
+SFCConverter::SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir, QString pouName) :
+	GeneralConverter(xml, xmlFile, outDir) {
 	_pouName = pouName;
 }
 

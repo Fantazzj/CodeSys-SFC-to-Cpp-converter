@@ -5,15 +5,17 @@
 #include <QTextStream>
 #include <QXmlStreamReader>
 #include <QRegularExpression>
+#include <QDir>
 
 class GeneralConverter {
 private:
 public:
-	GeneralConverter(QXmlStreamReader* xml, QFile* xmlFile);
+	GeneralConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir);
 	//virtual void exec();
 
 protected:
 	QXmlStreamReader* _xml;
+	QDir _outDir;
 	QFile* _xmlFile;
 	quint64 _startLine;
 	void _reachElement(QString name, QXmlStreamReader::TokenType tokenType = QXmlStreamReader::StartElement);

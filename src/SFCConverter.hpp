@@ -43,7 +43,7 @@ private:
 	static void _sortActions(QVector<Action>* actionsList);
 
 public:
-	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName);
+	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir, QString pouName);
 	QString enumStates();
 	QString autoCycleDef();
 	static QString autoCycleDec();

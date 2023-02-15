@@ -1,10 +1,7 @@
 #include "Converter.hpp"
 
-Converter::Converter(QXmlStreamReader* xml, QFile* xmlFile) :
-	GeneralConverter(xml, xmlFile) {
-	//_xml = xml;
-	//_xmlFile = xmlFile;
-}
+Converter::Converter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir) :
+	GeneralConverter(xml, xmlFile, outDir) {}
 
 void Converter::exec() {
 	_createTimerClass();
@@ -21,11 +18,11 @@ void Converter::exec() {
 void Converter::_convertPou() {
 	QString pouName = _getAttribute("name");
 
-	QFile cppFile = QFile(QString("../") + pouName + QString(".cpp"));
+	QFile cppFile = QFile(_outDir.dirName() + QString("/") + pouName + QString(".cpp"));
 	cppFile.open(QIODevice::WriteOnly | QIODevice::Text);
 	QTextStream cpp = QTextStream(&cppFile);
 
-	QFile hppFile = QFile(QString("../") + pouName + QString(".hpp"));
+	QFile hppFile = QFile(_outDir.dirName() + QString("/") + pouName + QString(".hpp"));
 	hppFile.open(QIODevice::WriteOnly | QIODevice::Text);
 	QTextStream hpp = QTextStream(&hppFile);
 
@@ -40,14 +37,14 @@ void Converter::_convertPou() {
 		<< "\n"
 		<< Qt::flush;
 
-	VarsConverter varsConverter = VarsConverter(_xml, _xmlFile);
+	VarsConverter varsConverter = VarsConverter(_xml, _xmlFile, _outDir);
 	QString publicVars = varsConverter.publicVars();
 
 	_reachElement("body");
 	_xml->readNextStartElement();
 
 	if(_xml->name() == QString("SFC")) {
-		SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, pouName);
+		SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, _outDir, pouName);
 
 		hpp << sfcConverter.enumStates()
 			<< "class " << pouName << " {\n"
@@ -76,11 +73,11 @@ void Converter::_convertPou() {
 }
 
 void Converter::_createTimerClass() {
-	QFile cppFile = QFile("../" + QString("Timer.cpp"));
+	QFile cppFile = QFile(_outDir.dirName() + QString("/") + QString("Timer.cpp"));
 	cppFile.open(QIODevice::WriteOnly | QIODevice::Text);
 	QTextStream cpp = QTextStream(&cppFile);
 
-	QFile hppFile = QFile("../" + QString("Timer.hpp"));
+	QFile hppFile = QFile(_outDir.dirName() + QString("/") + QString("Timer.hpp"));
 	hppFile.open(QIODevice::WriteOnly | QIODevice::Text);
 	QTextStream hpp = QTextStream(&hppFile);
 

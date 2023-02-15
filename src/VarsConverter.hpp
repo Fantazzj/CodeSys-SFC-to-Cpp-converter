@@ -25,7 +25,7 @@ private:
 	QVector<Variable> _searchVariables();
 
 public:
-	VarsConverter(QXmlStreamReader* xml, QFile* xmlFile);
+	VarsConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir);
 	QString publicVars();
 };
 

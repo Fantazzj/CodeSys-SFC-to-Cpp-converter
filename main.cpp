@@ -10,9 +10,12 @@ int main(int argc, char* argv[]) {
 
 	QFile xmlFile = QFile(xmlFileName);
 	xmlFile.open(QIODevice::ReadOnly | QIODevice::Text);
-	QXmlStreamReader* xml = new QXmlStreamReader(&xmlFile);
+	auto* xml = new QXmlStreamReader(&xmlFile);
 
-	Converter converter = Converter(xml, &xmlFile);
+	QDir outDir = QDir("./out/");
+	if(!outDir.exists()) outDir.mkpath(".");
+
+	Converter converter = Converter(xml, &xmlFile, outDir);
 	converter.exec();
 
 	xmlFile.close();

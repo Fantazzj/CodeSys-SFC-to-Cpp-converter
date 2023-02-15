@@ -4,6 +4,7 @@
 #include "GeneralConverter.hpp"
 #include "SFCConverter.hpp"
 #include "VarsConverter.hpp"
+#include <QDir>
 #include <QTextStream>
 #include <QXmlStreamReader>
 
@@ -13,7 +14,7 @@ private:
 	void _createTimerClass();
 
 public:
-	Converter(QXmlStreamReader* xml, QFile* xmlFile);
+	Converter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir);
 	void exec();
 
 protected:
