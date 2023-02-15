@@ -38,7 +38,7 @@ QVector<Variable> VarsConverter::_searchVariables() {
 QString VarsConverter::publicVars() {
 	QString out;
 	QVector<Variable> variableList = _searchVariables();
-	for(Variable V: variableList) {
+	for(auto& V: variableList) {
 		if(V.type == QString("TIME")) _convertTime(&V.init);
 		_convertType(&V.type);
 		out += QString("\t") + V.type + QString(" ") + V.name;

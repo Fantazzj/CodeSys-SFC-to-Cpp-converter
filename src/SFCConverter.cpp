@@ -25,7 +25,7 @@ QString SFCConverter::autoCycleDef() {
 	out += QString("void ") + _pouName + QString("::autoCycle() {\n");
 	out += QString("\telapsedMillis = Timer::milliseconds() - previousMillis;\n");
 	QVector<Step> stepList = _searchStepsInfo();
-	for(Step S: stepList) {
+	for(auto& S: stepList) {
 		out += QString("\tif(step==") + S.actual + QString(" && ") + S.transition + QString(")");
 		out += QString(" changeStep(") + S.next + QString(");\n");
 	}
@@ -45,7 +45,7 @@ QString SFCConverter::outputAnalysisDef() {
 	QString out;
 
 	QVector<Action> actionsList = _searchActions();
-	_sortActions(&actionsList);
+	//_sortActions(&actionsList);
 
 	out += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
 	for(qint64 i = 0, vPos = i; i < actionsList.size(); i++) {
@@ -124,7 +124,7 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 			condition.replace("not ", "!");
 			_convertTime(&condition);
 			for(QString S: stepsNames)
-				condition.replace(S+QString(".t"), "elapsedMillis");
+				condition.replace(S + QString(".t"), "elapsedMillis");
 
 			if(last == Transition) {
 				newStep.next = convStep.last();
