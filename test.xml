@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2022-12-12T17:08:57.2894218" />
-  <contentHeader name="test.project" modificationDateTime="2022-12-12T17:08:32.9412574">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2023-02-15T12:59:17.1674637" />
+  <contentHeader name="test.project" modificationDateTime="2023-02-15T12:50:55.5586453">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -74,6 +74,9 @@
               <type>
                 <BOOL />
               </type>
+              <initialValue>
+                <simpleValue value="0" />
+              </initialValue>
             </variable>
             <variable name="out0">
               <type>
@@ -135,6 +138,11 @@
               <initialValue>
                 <simpleValue value="TIME#4ms" />
               </initialValue>
+            </variable>
+            <variable name="out1">
+              <type>
+                <BOOL />
+              </type>
             </variable>
           </localVars>
         </interface>
@@ -315,6 +323,7 @@
                 <connection refLocalId="11" />
               </connectionPointIn>
               <connectionPointOut formalParameter="sfc" />
+              <connectionPointOutAction formalParameter="x" />
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
                   <attributes xmlns="">
@@ -327,19 +336,40 @@
                 </data>
               </addData>
             </step>
-            <inVariable localId="13">
+            <actionBlock localId="14">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="12" />
+              </connectionPointIn>
+              <action localId="13" qualifier="S" duration="" indicator="">
+                <relPosition x="0" y="0" />
+                <reference name="out1" />
+                <connectionPointOut />
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                    <attributes xmlns="">
+                      <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">out1</attribute>
+                      <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                      <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
+                      <attribute guid="e174fc0d-80b0-4a9e-a530-ca239c249a50">S</attribute>
+                    </attributes>
+                  </data>
+                </addData>
+              </action>
+            </actionBlock>
+            <inVariable localId="15">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>T2 &gt; T#9H</expression>
             </inVariable>
-            <transition localId="14">
+            <transition localId="16">
               <position x="0" y="0" />
               <connectionPointIn>
                 <connection refLocalId="12" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="13" />
+                  <connection refLocalId="15" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -354,20 +384,20 @@
                 </data>
               </addData>
             </transition>
-            <selectionConvergence localId="15">
+            <selectionConvergence localId="17">
               <position x="0" y="0" />
               <connectionPointIn>
                 <connection refLocalId="9" formalParameter="sfc" />
               </connectionPointIn>
               <connectionPointIn>
-                <connection refLocalId="14" formalParameter="sfc" />
+                <connection refLocalId="16" formalParameter="sfc" />
               </connectionPointIn>
               <connectionPointOut />
             </selectionConvergence>
-            <step localId="16" name="Step4">
+            <step localId="18" name="Step4">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="15" />
+                <connection refLocalId="17" />
               </connectionPointIn>
               <connectionPointOut formalParameter="sfc" />
               <addData>
@@ -382,10 +412,10 @@
                 </data>
               </addData>
             </step>
-            <selectionDivergence localId="17">
+            <selectionDivergence localId="19">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="16" />
+                <connection refLocalId="18" />
               </connectionPointIn>
               <connectionPointOut formalParameter="sfc" />
               <connectionPointOut formalParameter="sfc" />
@@ -401,19 +431,19 @@
                 </data>
               </addData>
             </selectionDivergence>
-            <inVariable localId="18">
+            <inVariable localId="20">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>Step4.t &gt; T2</expression>
             </inVariable>
-            <transition localId="19">
+            <transition localId="21">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="17" formalParameter="sfc" />
+                <connection refLocalId="19" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="18" />
+                  <connection refLocalId="20" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -428,12 +458,13 @@
                 </data>
               </addData>
             </transition>
-            <step localId="20" name="Step8">
+            <step localId="22" name="Step8">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="19" />
+                <connection refLocalId="21" />
               </connectionPointIn>
               <connectionPointOut formalParameter="sfc" />
+              <connectionPointOutAction formalParameter="x" />
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
                   <attributes xmlns="">
@@ -446,19 +477,40 @@
                 </data>
               </addData>
             </step>
-            <inVariable localId="21">
+            <actionBlock localId="24">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="22" />
+              </connectionPointIn>
+              <action localId="23" qualifier="S" duration="" indicator="">
+                <relPosition x="0" y="0" />
+                <reference name="out1" />
+                <connectionPointOut />
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                    <attributes xmlns="">
+                      <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">out1</attribute>
+                      <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                      <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
+                      <attribute guid="e174fc0d-80b0-4a9e-a530-ca239c249a50">S</attribute>
+                    </attributes>
+                  </data>
+                </addData>
+              </action>
+            </actionBlock>
+            <inVariable localId="25">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>trans11</expression>
             </inVariable>
-            <transition localId="22">
+            <transition localId="26">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="20" formalParameter="sfc" />
+                <connection refLocalId="22" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="21" />
+                  <connection refLocalId="25" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -473,10 +525,10 @@
                 </data>
               </addData>
             </transition>
-            <jumpStep localId="23" targetName="Step0">
+            <jumpStep localId="27" targetName="Step0">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="22" />
+                <connection refLocalId="26" />
               </connectionPointIn>
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
@@ -487,19 +539,19 @@
                 </data>
               </addData>
             </jumpStep>
-            <inVariable localId="24">
+            <inVariable localId="28">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>trans12</expression>
             </inVariable>
-            <transition localId="25">
+            <transition localId="29">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="17" formalParameter="sfc" />
+                <connection refLocalId="19" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="24" />
+                  <connection refLocalId="28" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -514,10 +566,10 @@
                 </data>
               </addData>
             </transition>
-            <step localId="26" name="Step9">
+            <step localId="30" name="Step9">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="25" />
+                <connection refLocalId="29" />
               </connectionPointIn>
               <connectionPointOut formalParameter="sfc" />
               <connectionPointOutAction formalParameter="x" />
@@ -533,12 +585,27 @@
                 </data>
               </addData>
             </step>
-            <actionBlock localId="28">
+            <actionBlock localId="33">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="26" />
+                <connection refLocalId="30" />
               </connectionPointIn>
-              <action localId="27" qualifier="N" duration="" indicator="">
+              <action localId="31" qualifier="R" duration="" indicator="">
+                <relPosition x="0" y="0" />
+                <reference name="out1" />
+                <connectionPointOut />
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                    <attributes xmlns="">
+                      <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">out1</attribute>
+                      <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                      <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
+                      <attribute guid="e174fc0d-80b0-4a9e-a530-ca239c249a50">R</attribute>
+                    </attributes>
+                  </data>
+                </addData>
+              </action>
+              <action localId="32" qualifier="N" duration="" indicator="">
                 <relPosition x="0" y="0" />
                 <reference name="out2" />
                 <connectionPointOut />
@@ -554,19 +621,19 @@
                 </addData>
               </action>
             </actionBlock>
-            <inVariable localId="29">
+            <inVariable localId="34">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>trans13</expression>
             </inVariable>
-            <transition localId="30">
+            <transition localId="35">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="26" formalParameter="sfc" />
+                <connection refLocalId="30" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="29" />
+                  <connection refLocalId="34" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -581,10 +648,10 @@
                 </data>
               </addData>
             </transition>
-            <jumpStep localId="31" targetName="Step7">
+            <jumpStep localId="36" targetName="Step7">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="30" />
+                <connection refLocalId="35" />
               </connectionPointIn>
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
@@ -595,19 +662,19 @@
                 </data>
               </addData>
             </jumpStep>
-            <inVariable localId="32">
+            <inVariable localId="37">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>trans14</expression>
             </inVariable>
-            <transition localId="33">
+            <transition localId="38">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="17" formalParameter="sfc" />
+                <connection refLocalId="19" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="32" />
+                  <connection refLocalId="37" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -622,12 +689,13 @@
                 </data>
               </addData>
             </transition>
-            <step localId="34" name="Step10">
+            <step localId="39" name="Step10">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="33" />
+                <connection refLocalId="38" />
               </connectionPointIn>
               <connectionPointOut formalParameter="sfc" />
+              <connectionPointOutAction formalParameter="x" />
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
                   <attributes xmlns="">
@@ -640,19 +708,40 @@
                 </data>
               </addData>
             </step>
-            <inVariable localId="35">
+            <actionBlock localId="41">
+              <position x="0" y="0" />
+              <connectionPointIn>
+                <connection refLocalId="39" />
+              </connectionPointIn>
+              <action localId="40" qualifier="R" duration="" indicator="">
+                <relPosition x="0" y="0" />
+                <reference name="out1" />
+                <connectionPointOut />
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
+                    <attributes xmlns="">
+                      <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">out1</attribute>
+                      <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
+                      <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
+                      <attribute guid="e174fc0d-80b0-4a9e-a530-ca239c249a50">R</attribute>
+                    </attributes>
+                  </data>
+                </addData>
+              </action>
+            </actionBlock>
+            <inVariable localId="42">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>trans15</expression>
             </inVariable>
-            <transition localId="36">
+            <transition localId="43">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="34" formalParameter="sfc" />
+                <connection refLocalId="39" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="35" />
+                  <connection refLocalId="42" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -667,19 +756,19 @@
                 </data>
               </addData>
             </transition>
-            <inVariable localId="37">
+            <inVariable localId="44">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>trans16</expression>
             </inVariable>
-            <transition localId="38">
+            <transition localId="45">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="17" formalParameter="sfc" />
+                <connection refLocalId="19" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="37" />
+                  <connection refLocalId="44" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -694,10 +783,10 @@
                 </data>
               </addData>
             </transition>
-            <step localId="39" name="Step11">
+            <step localId="46" name="Step11">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="38" />
+                <connection refLocalId="45" />
               </connectionPointIn>
               <connectionPointOut formalParameter="sfc" />
               <connectionPointOutAction formalParameter="x" />
@@ -713,12 +802,12 @@
                 </data>
               </addData>
             </step>
-            <actionBlock localId="41">
+            <actionBlock localId="48">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="39" />
+                <connection refLocalId="46" />
               </connectionPointIn>
-              <action localId="40" qualifier="N" duration="" indicator="">
+              <action localId="47" qualifier="N" duration="" indicator="">
                 <relPosition x="0" y="0" />
                 <reference name="out0" />
                 <connectionPointOut />
@@ -734,19 +823,19 @@
                 </addData>
               </action>
             </actionBlock>
-            <inVariable localId="42">
+            <inVariable localId="49">
               <position x="0" y="0" />
               <connectionPointOut />
               <expression>trans17</expression>
             </inVariable>
-            <transition localId="43">
+            <transition localId="50">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="39" formalParameter="sfc" />
+                <connection refLocalId="46" formalParameter="sfc" />
               </connectionPointIn>
               <condition>
                 <connectionPointIn>
-                  <connection refLocalId="42" />
+                  <connection refLocalId="49" />
                 </connectionPointIn>
               </condition>
               <addData>
@@ -761,13 +850,10 @@
                 </data>
               </addData>
             </transition>
-            <selectionConvergence localId="44">
+            <selectionConvergence localId="51">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="23" formalParameter="sfc" />
-              </connectionPointIn>
-              <connectionPointIn>
-                <connection refLocalId="31" formalParameter="sfc" />
+                <connection refLocalId="27" formalParameter="sfc" />
               </connectionPointIn>
               <connectionPointIn>
                 <connection refLocalId="36" formalParameter="sfc" />
@@ -775,12 +861,15 @@
               <connectionPointIn>
                 <connection refLocalId="43" formalParameter="sfc" />
               </connectionPointIn>
+              <connectionPointIn>
+                <connection refLocalId="50" formalParameter="sfc" />
+              </connectionPointIn>
               <connectionPointOut />
             </selectionConvergence>
-            <jumpStep localId="45" targetName="Init">
+            <jumpStep localId="52" targetName="Init">
               <position x="0" y="0" />
               <connectionPointIn>
-                <connection refLocalId="44" />
+                <connection refLocalId="51" />
               </connectionPointIn>
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
