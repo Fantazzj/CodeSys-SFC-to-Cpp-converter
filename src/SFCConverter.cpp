@@ -48,6 +48,36 @@ QString SFCConverter::outputAnalysisDef() {
 	//_sortActions(&actionsList);
 
 	out += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
+	for(auto& A: actionsList) {
+		if(A.type == "N") {
+			out += QString("\tif(");
+			for(auto& S: A.steps) {
+				out += QString("step == ") + S;
+				if(&S != &A.steps.last())out += QString(" || ");
+			}
+			out += QString(") ") + A.variable + QString(" = 1;\n");
+			out += QString("\telse ") + A.variable + QString(" = 0;\n");
+		}
+		if(A.type == "S") {
+			out += QString("\tif(");
+			for(auto& S: A.steps) {
+				out += QString("step == ") + S;
+				if(&S != &A.steps.last())out += QString(" || ");
+			}
+			out += QString(") ") + A.variable + QString(" = 1;\n");
+		}
+		if(A.type == "R") {
+			out += QString("\tif(");
+			for(auto& S: A.steps) {
+				out += QString("step == ") + S;
+				if(&S != &A.steps.last())out += QString(" || ");
+			}
+			out += QString(") ") + A.variable + QString(" = 0;\n");
+		}
+	}
+	out += QString("}\n");
+
+	/*out += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
 	for(qint64 i = 0, vPos = i; i < actionsList.size(); i++) {
 		if(actionsList.at(vPos).variable != actionsList.at(i).variable || i == 0) {
 			if(i != 0) {
@@ -63,6 +93,7 @@ QString SFCConverter::outputAnalysisDef() {
 		}
 	}
 	out += QString("}\n");
+	 */
 
 	return out;
 }
@@ -179,12 +210,30 @@ QVector<Action> SFCConverter::_searchActions() {
 		}
 
 		else if(_isElement("actionBlock")) {
-			_reachElement("reference");
-			QString variable = _getAttribute("name");
-			Action newAction;
-			newAction.variable = variable;
-			newAction.step = lastStep;
-			actionsList.append(newAction);
+			do {
+				_reachElement("action");
+				QString type = _getAttribute("qualifier");
+				_reachElement("reference");
+				QString variable = _getAttribute("name");
+
+				bool found = false;
+				for(auto& A: actionsList) {
+					if(A.variable == variable && A.type == type) {
+						A.steps.append(lastStep);
+						found = true;
+						break;
+					}
+				}
+				if(!found) {
+					Action newAction;
+					newAction.type = type;
+					newAction.variable = variable;
+					newAction.steps.append(lastStep);
+					actionsList.append(newAction);
+				}
+				_reachElement("action", QXmlStreamReader::EndElement);
+				_xml->readNextStartElement();
+			} while(!_isElement("actionBlock", QXmlStreamReader::EndElement));
 		}
 	}
 

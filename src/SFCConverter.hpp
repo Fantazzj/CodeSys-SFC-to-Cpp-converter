@@ -20,7 +20,8 @@ enum SFC {
 class Action {
 public:
 	QString variable;
-	QString step;
+	QVector<QString> steps;
+	QString type;
 };
 
 class Step {

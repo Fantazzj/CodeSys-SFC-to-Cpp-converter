@@ -28,6 +28,12 @@ QVector<Variable> VarsConverter::_searchVariables() {
 			variablesList.append(newVariable);
 			last = InitialValue;
 		}
+
+	}
+
+	if(last == Type) {
+		newVariable.init = QString("");
+		variablesList.append(newVariable);
 	}
 
 	_backToLine(_startLine);
