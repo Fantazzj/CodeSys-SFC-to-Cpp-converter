@@ -204,15 +204,15 @@ void SFCConverter::_sortActions(QVector<Action>* actionsList) {
 }
 
 QString SFCConverter::autoCycleDec() {
-	return {"\tvoid autoCycle();\n"};
+	return "\tvoid autoCycle();\n";
 }
 
 QString SFCConverter::outputAnalysisDec() {
-	return {"\tvoid outputAnalysis();\n"};
+	return "\tvoid outputAnalysis();\n";
 }
 
 QString SFCConverter::changeStepDec() {
-	return {"\tvoid changeStep(Step step);\n"};
+	return "\tvoid changeStep(Step step);\n";
 }
 
 QString SFCConverter::changeStepDef() {
@@ -222,7 +222,7 @@ QString SFCConverter::changeStepDef() {
 	out += QString("\tthis->step = step;\n");
 	out += QString("\telapsedMillis = 0;\n");
 	out += QString("\tpreviousMillis = Timer::milliseconds();\n");
-		out += QString("}\n");
+	out += QString("}\n");
 
 	return out;
 }

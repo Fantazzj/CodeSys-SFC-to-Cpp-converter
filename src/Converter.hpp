@@ -9,8 +9,8 @@
 
 class Converter : public GeneralConverter {
 private:
-	QXmlStreamReader* _xml;
-	QFile* _xmlFile;
+	//QXmlStreamReader* _xml;
+	//QFile* _xmlFile;
 	void _convertPou();
 	void _createTimerClass();
 

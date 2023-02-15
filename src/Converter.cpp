@@ -2,8 +2,8 @@
 
 Converter::Converter(QXmlStreamReader* xml, QFile* xmlFile) :
 	GeneralConverter(xml, xmlFile) {
-	_xml = xml;
-	_xmlFile = xmlFile;
+	//_xml = xml;
+	//_xmlFile = xmlFile;
 }
 
 void Converter::exec() {
@@ -19,25 +19,26 @@ void Converter::exec() {
 }
 
 void Converter::_convertPou() {
-	QString pouName = _xml->attributes().value(QString("name")).toString();
+	QString pouName = _getAttribute("name");
 
 	QFile cppFile = QFile(QString("../") + pouName + QString(".cpp"));
 	cppFile.open(QIODevice::WriteOnly | QIODevice::Text);
-	QTextStream* cpp = new QTextStream(&cppFile);
+	QTextStream cpp = QTextStream(&cppFile);
 
 	QFile hppFile = QFile(QString("../") + pouName + QString(".hpp"));
 	hppFile.open(QIODevice::WriteOnly | QIODevice::Text);
-	QTextStream* hpp = new QTextStream(&hppFile);
+	QTextStream hpp = QTextStream(&hppFile);
 
-	*hpp << "#ifndef " << pouName.toUpper() << "_HPP\n"
-		 << "#define " << pouName.toUpper() << "_HPP\n"
-		 << "\n"
-		 << "#include \"Timer.hpp\"\n"
-		 << "\n"
-		 << Qt::flush;
-	*cpp << "#include \"" << pouName.toUpper() << ".hpp\"\n"
-		 << "\n"
-		 << Qt::flush;
+	hpp << "#ifndef " << pouName.toUpper() << "_HPP\n"
+		<< "#define " << pouName.toUpper() << "_HPP\n"
+		<< "\n"
+		<< "#include \"Timer.hpp\"\n"
+		<< "\n"
+		<< Qt::flush;
+
+	cpp << "#include \"" << pouName.toUpper() << ".hpp\"\n"
+		<< "\n"
+		<< Qt::flush;
 
 	VarsConverter varsConverter = VarsConverter(_xml, _xmlFile);
 	QString publicVars = varsConverter.publicVars();
@@ -48,26 +49,27 @@ void Converter::_convertPou() {
 	if(_xml->name() == QString("SFC")) {
 		SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, pouName);
 
-		*hpp << sfcConverter.enumStates()
-			 << "class " << pouName << " {\n"
-			 << "public:\n"
-			 << SFCConverter::autoCycleDec()
-			 << SFCConverter::outputAnalysisDec()
-			 << publicVars
-			 << "private:\n"
-			 << SFCConverter::privateVars()
-			 << SFCConverter::changeStepDec()
-			 << "};\n\n"
-			 << Qt::flush;
+		hpp << sfcConverter.enumStates()
+			<< "class " << pouName << " {\n"
+			<< "public:\n"
+			<< SFCConverter::autoCycleDec()
+			<< SFCConverter::outputAnalysisDec()
+			<< publicVars
+			<< "private:\n"
+			<< SFCConverter::privateVars()
+			<< SFCConverter::changeStepDec()
+			<< "};\n"
+			<< "\n"
+			<< Qt::flush;
 
-		*cpp << sfcConverter.autoCycleDef()
-			 << sfcConverter.outputAnalysisDef()
-			 << sfcConverter.changeStepDef()
-			 << Qt::flush;
+		cpp << sfcConverter.autoCycleDef()
+			<< sfcConverter.outputAnalysisDef()
+			<< sfcConverter.changeStepDef()
+			<< Qt::flush;
 	}
 
-	*hpp << "#endif\n"
-		 << Qt::flush;
+	hpp << "#endif\n"
+		<< Qt::flush;
 
 	cppFile.close();
 	hppFile.close();
