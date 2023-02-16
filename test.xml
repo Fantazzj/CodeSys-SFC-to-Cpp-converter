@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2023-02-15T12:59:17.1674637" />
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP18 Patch 3" creationDateTime="2023-02-16T11:12:24.5614256" />
   <contentHeader name="test.project" modificationDateTime="2023-02-15T12:50:55.5586453">
     <coordinateInfo>
       <fbd>
@@ -247,7 +247,7 @@
                   </data>
                 </addData>
               </action>
-              <action localId="6" qualifier="N" duration="" indicator="">
+              <action localId="6" qualifier="P" duration="" indicator="">
                 <relPosition x="0" y="0" />
                 <reference name="out2" />
                 <connectionPointOut />
@@ -257,7 +257,7 @@
                       <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">out2</attribute>
                       <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
                       <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
-                      <attribute guid="e174fc0d-80b0-4a9e-a530-ca239c249a50">N</attribute>
+                      <attribute guid="e174fc0d-80b0-4a9e-a530-ca239c249a50">P</attribute>
                     </attributes>
                   </data>
                 </addData>
@@ -360,7 +360,7 @@
             <inVariable localId="15">
               <position x="0" y="0" />
               <connectionPointOut />
-              <expression>T2 &gt; T#9H</expression>
+              <expression>T2 &gt; T#1m</expression>
             </inVariable>
             <transition localId="16">
               <position x="0" y="0" />
@@ -375,7 +375,7 @@
               <addData>
                 <data name="http://www.3s-software.com/plcopenxml/sfc/element" handleUnknown="implementation">
                   <attributes xmlns="">
-                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">T2 &gt; T#9H</attribute>
+                    <attribute guid="38391c6d-6d4a-42f8-8ee7-9f45e5adafa8">T2 &gt; T#1m</attribute>
                     <attribute guid="01580b27-6378-448b-8ecb-0e4b795b58d6">FALSE</attribute>
                     <attribute guid="bc882c11-1e91-4dd8-a6b8-2075724ed18b">0</attribute>
                     <attribute guid="62e1754b-7629-4e63-9cec-10ae0c536f1f">FALSE</attribute>
