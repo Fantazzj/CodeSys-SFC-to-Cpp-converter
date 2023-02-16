@@ -22,6 +22,7 @@ public:
 	QString variable;
 	QVector<QString> steps;
 	QString type;
+	QString time;
 };
 
 class Step {

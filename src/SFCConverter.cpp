@@ -26,7 +26,7 @@ QString SFCConverter::autoCycleDef() {
 	out += QString("\telapsedMillis = Timer::milliseconds() - previousMillis;\n");
 	QVector<Step> stepList = _searchStepsInfo();
 	for(auto& S: stepList) {
-		out += QString("\tif(step==") + S.actual + QString(" && ") + S.transition + QString(")");
+		out += QString("\tif(newStep==") + S.actual + QString(" && ") + S.transition + QString(")");
 		out += QString(" changeStep(") + S.next + QString(");\n");
 	}
 	out += QString("}\n");
@@ -35,8 +35,8 @@ QString SFCConverter::autoCycleDef() {
 
 QString SFCConverter::privateVars() {
 	QString out;
-	out += QString("\tStep step;\n");
-	out += QString("\tbool first;\n");
+	out += QString("\tStep newStep;\n");
+	out += QString("\tStep oldStep;\n");
 	out += QString("\tunsigned long elapsedMillis = 0;\n");
 	out += QString("\tunsigned long previousMillis = 0;\n");
 	return out;
@@ -52,7 +52,7 @@ QString SFCConverter::outputAnalysisDef() {
 		if(A.type == "N") {
 			out += QString("\tif(");
 			for(auto& S: A.steps) {
-				out += QString("step == ") + S;
+				out += QString("newStep == ") + S;
 				if(&S != &A.steps.last()) out += QString(" || ");
 			}
 			out += QString(") ") + A.variable + QString(" = 1;\n");
@@ -61,7 +61,7 @@ QString SFCConverter::outputAnalysisDef() {
 		if(A.type == "S") {
 			out += QString("\tif(");
 			for(auto& S: A.steps) {
-				out += QString("step == ") + S;
+				out += QString("newStep == ") + S;
 				if(&S != &A.steps.last()) out += QString(" || ");
 			}
 			out += QString(") ") + A.variable + QString(" = 1;\n");
@@ -69,21 +69,49 @@ QString SFCConverter::outputAnalysisDef() {
 		if(A.type == "R") {
 			out += QString("\tif(");
 			for(auto& S: A.steps) {
-				out += QString("step == ") + S;
+				out += QString("newStep == ") + S;
 				if(&S != &A.steps.last()) out += QString(" || ");
 			}
 			out += QString(") ") + A.variable + QString(" = 0;\n");
 		}
 		if(A.type == "P") {
-			out += QString("\tif(first && (");
+			out += QString("\tif(newStep != oldStep && (");
 			for(auto& S: A.steps) {
-				out += QString("step == ") + S;
+				out += QString("newStep == ") + S;
 				if(&S != &A.steps.last()) out += QString(" || ");
 			}
 			out += QString(")) ") + A.variable + QString(" = 1;\n");
 			out += QString("\telse ") + A.variable + QString(" = 0;\n");
 		}
+		if(A.type == "D") {
+			out += QString("\tif(elapsedMillis >= ") + A.time + QString(" && (");
+			for(auto& S: A.steps) {
+				out += QString("newStep == ") + S;
+				if(&S != &A.steps.last()) out += QString(" || ");
+			}
+			out += QString(")) ") + A.variable + QString(" = 1;\n");
+			out += QString("\telse ") + A.variable + QString(" = 0;\n");
+		}
+		if(A.type == "L") {
+			out += QString("\tif(elapsedMillis <= ") + A.time + QString(" && (");
+			for(auto& S: A.steps) {
+				out += QString("newStep == ") + S;
+				if(&S != &A.steps.last()) out += QString(" || ");
+			}
+			out += QString(")) ") + A.variable + QString(" = 1;\n");
+			out += QString("\telse ") + A.variable + QString(" = 0;\n");
+		}
+		/*if(A.type == "SL") {
+			out += QString("\tif(elapsedMillis <= ") + A.time + QString(" && (");
+			for(auto& S: A.steps) {
+				out += QString("newStep == ") + S;
+				if(&S != &A.steps.last()) out += QString(" || ");
+			}
+			out += QString(")) ") + A.variable + QString(" = 1;\n");
+			out += QString("\telse ") + A.variable + QString(" = 0;\n");
+		}*/
 	}
+	out += QString("\toldStep = newStep;\n");
 	out += QString("}\n");
 
 	return out;
@@ -204,6 +232,8 @@ QVector<Action> SFCConverter::_searchActions() {
 			do {
 				_reachElement("action");
 				QString type = _getAttribute("qualifier");
+				QString time = _getAttribute("duration");
+				_convertTime(&time);
 				_reachElement("reference");
 				QString variable = _getAttribute("name");
 
@@ -219,6 +249,7 @@ QVector<Action> SFCConverter::_searchActions() {
 					Action newAction;
 					newAction.type = type;
 					newAction.variable = variable;
+					newAction.time = time;
 					newAction.steps.append(lastStep);
 					actionsList.append(newAction);
 				}
@@ -248,8 +279,8 @@ QString SFCConverter::changeStepDec() {
 QString SFCConverter::changeStepDef() {
 	QString out;
 
-	out += QString("void ") + _pouName + QString("::changeStep(Step step){\n");
-	out += QString("\tthis->step = step;\n");
+	out += QString("void ") + _pouName + QString("::changeStep(Step newStep){\n");
+	out += QString("\tthis->newStep = newStep;\n");
 	out += QString("\telapsedMillis = 0;\n");
 	out += QString("\tpreviousMillis = Timer::milliseconds();\n");
 	out += QString("}\n");
