@@ -37,8 +37,15 @@ QString SFCConverter::privateVars() {
 	QString out;
 	out += QString("\tStep newStep;\n");
 	out += QString("\tStep oldStep;\n");
-	out += QString("\tunsigned long elapsedMillis = 0;\n");
-	out += QString("\tunsigned long previousMillis = 0;\n");
+	out += QString("\tunsigned long long elapsedMillis = 0;\n");
+	out += QString("\tunsigned long long previousMillis = 0;\n");
+
+	QVector<Action> actionsList = _searchActions();
+	for(auto& A: actionsList)
+		if(A.type == "SL" || A.type == "DS" || A.type == "SD")
+			out += QString("\tunsigned long long ") + A.variable + QString("Start = 0;\n");
+
+
 	return out;
 }
 
@@ -101,15 +108,19 @@ QString SFCConverter::outputAnalysisDef() {
 			out += QString(")) ") + A.variable + QString(" = 1;\n");
 			out += QString("\telse ") + A.variable + QString(" = 0;\n");
 		}
-		/*if(A.type == "SL") {
-			out += QString("\tif(elapsedMillis <= ") + A.time + QString(" && (");
+		if(A.type == "SL") {
+			out += QString("\tif(");
 			for(auto& S: A.steps) {
 				out += QString("newStep == ") + S;
 				if(&S != &A.steps.last()) out += QString(" || ");
 			}
-			out += QString(")) ") + A.variable + QString(" = 1;\n");
-			out += QString("\telse ") + A.variable + QString(" = 0;\n");
-		}*/
+			out += QString(") ") + A.variable + QString(" = 1;\n");
+			out += QString("\tif((") + A.variable + QString("Start + elapsedMillis) > ") + A.time + QString(") {\n");
+			out += QString("\t\t") + A.variable + QString(" = 0;\n");
+			out += QString("\t\t") + A.variable + QString("Start = Timer::milliseconds();\n");
+			out += QString("\t}\n");
+			out += QString("\tif((Timer::milliseconds() - ") + A.variable + QString("Start) > ") + A.time + QString(") ") + A.variable + QString(" = 0;\n");
+		}
 	}
 	out += QString("\toldStep = newStep;\n");
 	out += QString("}\n");

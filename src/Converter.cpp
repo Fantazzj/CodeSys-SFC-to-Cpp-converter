@@ -49,12 +49,12 @@ void Converter::_convertPou() {
 		hpp << sfcConverter.enumStates()
 			<< "class " << pouName << " {\n"
 			<< "public:\n"
-			<< SFCConverter::autoCycleDec()
-			<< SFCConverter::outputAnalysisDec()
+			<< sfcConverter.autoCycleDec()
+			<< sfcConverter.outputAnalysisDec()
 			<< publicVars
 			<< "private:\n"
-			<< SFCConverter::privateVars()
-			<< SFCConverter::changeStepDec()
+			<< sfcConverter.privateVars()
+			<< sfcConverter.changeStepDec()
 			<< "};\n"
 			<< "\n"
 			<< Qt::flush;

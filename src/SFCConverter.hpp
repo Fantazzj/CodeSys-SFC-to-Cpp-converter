@@ -45,12 +45,12 @@ public:
 	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir, QString pouName);
 	QString enumStates();
 	QString autoCycleDef();
-	static QString autoCycleDec();
+	QString autoCycleDec();
 	QString outputAnalysisDef();
-	static QString outputAnalysisDec();
+	QString outputAnalysisDec();
 	QString changeStepDef();
-	static QString changeStepDec();
-	static QString privateVars();
+	QString changeStepDec();
+	QString privateVars();
 };
 
 #endif//CODESYS_SFC_TO_CPP_CONVERTER_SFCCONVERTER_HPP
