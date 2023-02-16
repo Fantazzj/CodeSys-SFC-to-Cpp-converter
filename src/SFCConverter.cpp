@@ -36,6 +36,7 @@ QString SFCConverter::autoCycleDef() {
 QString SFCConverter::privateVars() {
 	QString out;
 	out += QString("\tStep step;\n");
+	out += QString("\tbool first;\n");
 	out += QString("\tunsigned long elapsedMillis = 0;\n");
 	out += QString("\tunsigned long previousMillis = 0;\n");
 	return out;
@@ -52,7 +53,7 @@ QString SFCConverter::outputAnalysisDef() {
 			out += QString("\tif(");
 			for(auto& S: A.steps) {
 				out += QString("step == ") + S;
-				if(&S != &A.steps.last())out += QString(" || ");
+				if(&S != &A.steps.last()) out += QString(" || ");
 			}
 			out += QString(") ") + A.variable + QString(" = 1;\n");
 			out += QString("\telse ") + A.variable + QString(" = 0;\n");
@@ -61,7 +62,7 @@ QString SFCConverter::outputAnalysisDef() {
 			out += QString("\tif(");
 			for(auto& S: A.steps) {
 				out += QString("step == ") + S;
-				if(&S != &A.steps.last())out += QString(" || ");
+				if(&S != &A.steps.last()) out += QString(" || ");
 			}
 			out += QString(") ") + A.variable + QString(" = 1;\n");
 		}
@@ -69,9 +70,18 @@ QString SFCConverter::outputAnalysisDef() {
 			out += QString("\tif(");
 			for(auto& S: A.steps) {
 				out += QString("step == ") + S;
-				if(&S != &A.steps.last())out += QString(" || ");
+				if(&S != &A.steps.last()) out += QString(" || ");
 			}
 			out += QString(") ") + A.variable + QString(" = 0;\n");
+		}
+		if(A.type == "P") {
+			out += QString("\tif(first && (");
+			for(auto& S: A.steps) {
+				out += QString("step == ") + S;
+				if(&S != &A.steps.last()) out += QString(" || ");
+			}
+			out += QString(")) ") + A.variable + QString(" = 1;\n");
+			out += QString("\telse ") + A.variable + QString(" = 0;\n");
 		}
 	}
 	out += QString("}\n");
