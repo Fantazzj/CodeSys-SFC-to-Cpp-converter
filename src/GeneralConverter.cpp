@@ -53,7 +53,10 @@ QStringList GeneralConverter::_convertTime(QString* time) {
 				qint64 val = value.sliced(nPos, i - nPos).toUInt();
 				if(value.at(i) == 'd') val = val * 24 * 60 * 60 * 1000;
 				if(value.at(i) == 'h') val = val * 60 * 60 * 1000;
-				if(value.at(i) == 'm' && value.at(i + 1) != 's') val = val * 60 * 1000;
+				if(value.at(i) == 'm') {
+					if(value.length()-1 <= i) val = val * 60 * 1000;
+					else if(value.at(i + 1) != 's') val = val * 60 * 1000;
+				}
 				if(value.at(i) == 's') val = val * 1000;
 				tot += val;
 				nPos = i + 1;
