@@ -34,13 +34,11 @@ public:
 class SFCConverter : public GeneralConverter {
 private:
 	QString _pouName;
-
 	QString _reachCondition();
 	QString _searchAfterConv();
 	QVector<Step> _searchStepsInfo();
 	QVector<QString> _searchStepsNames();
 	QVector<Action> _searchActions();
-	static void _sortActions(QVector<Action>* actionsList);
 
 public:
 	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir, QString pouName);

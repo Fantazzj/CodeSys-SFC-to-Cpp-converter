@@ -10,7 +10,7 @@ QString SFCConverter::enumStates() {
 	QVector<QString> stepsList = _searchStepsNames();
 	QVector<QString> done;
 	out += QString("enum Step: int {\n");
-	for(QString S: stepsList) {
+	for(auto& S: stepsList) {
 		if(!done.contains(S)) {
 			done.append(S);
 			out += QString("\t") + S + QString(",\n");
@@ -77,24 +77,6 @@ QString SFCConverter::outputAnalysisDef() {
 	}
 	out += QString("}\n");
 
-	/*out += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
-	for(qint64 i = 0, vPos = i; i < actionsList.size(); i++) {
-		if(actionsList.at(vPos).variable != actionsList.at(i).variable || i == 0) {
-			if(i != 0) {
-				out += QString(") ") + actionsList.at(vPos).variable + QString(" = 1;\n\telse ") + actionsList.at(vPos).variable + QString(" = 0;\n");
-			}
-			out += QString("\tif(step == ") + actionsList.at(i).step;
-			vPos = i;
-		} else {
-			out += QString(" || step == ") + actionsList.at(i).step;
-		}
-		if(i == actionsList.size() - 1) {
-			out += QString(") ") + actionsList.at(vPos).variable + QString(" = 1;\n\telse ") + actionsList.at(vPos).variable + QString(" = 0;\n");
-		}
-	}
-	out += QString("}\n");
-	 */
-
 	return out;
 }
 
@@ -154,7 +136,7 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 			condition.replace("or", "||");
 			condition.replace("not ", "!");
 			_convertTime(&condition);
-			for(QString S: stepsNames)
+			for(auto& S: stepsNames)
 				condition.replace(S + QString(".t"), "elapsedMillis");
 
 			if(last == Transition) {
@@ -240,16 +222,6 @@ QVector<Action> SFCConverter::_searchActions() {
 	_backToLine(_startLine);
 
 	return actionsList;
-}
-
-void SFCConverter::_sortActions(QVector<Action>* actionsList) {
-	for(qint64 i = 0; i < actionsList->size() - 1; i++) {
-		qint64 minPos = i;
-		for(qint64 j = i; j < actionsList->size(); j++) {
-			minPos = j;
-		}
-		actionsList->swapItemsAt(i, minPos);
-	}
 }
 
 QString SFCConverter::autoCycleDec() {
