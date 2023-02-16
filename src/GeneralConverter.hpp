@@ -23,8 +23,8 @@ protected:
 	QString _getAttribute(QString attribute);
 	void _backToLine(quint64 line);
 	void _goToLine(quint64 line);
-	QStringList _convertTime(QString* time);
-	void _convertType(QString* type);
+	static QStringList _convertTime(QString* time);
+	static void _convertType(QString* type);
 };
 
 #endif//CODESYS_SFC_TO_CPP_CONVERTER_GENERALCONVERTER_HPP

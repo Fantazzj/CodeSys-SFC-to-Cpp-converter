@@ -45,7 +45,6 @@ QString SFCConverter::outputAnalysisDef() {
 	QString out;
 
 	QVector<Action> actionsList = _searchActions();
-	//_sortActions(&actionsList);
 
 	out += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
 	for(auto& A: actionsList) {

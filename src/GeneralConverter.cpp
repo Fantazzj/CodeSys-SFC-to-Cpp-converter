@@ -44,8 +44,6 @@ QStringList GeneralConverter::_convertTime(QString* time) {
 		QString value = match.captured();
 		valueList.append(value);
 
-		//qDebug() << *time << value;
-
 		value = value.toLower();
 		value.remove("t#");
 		value.remove("time#");
