@@ -35,7 +35,6 @@ QString SFCConverter::autoCycleDef() {
 
 QString SFCConverter::privateVars() {
 	QString out;
-	out += QString("\tStep newStep;\n");
 	out += QString("\tStep oldStep;\n");
 	out += QString("\tunsigned long long elapsedMillis = 0;\n");
 	out += QString("\tunsigned long long previousMillis = 0;\n");
