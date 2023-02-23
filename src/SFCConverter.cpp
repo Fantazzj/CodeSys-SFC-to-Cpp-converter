@@ -41,10 +41,12 @@ QString SFCConverter::privateVars() {
 	out += QString("\tunsigned long long previousMillis = 0;\n");
 
 	QVector<Action> actionsList = _searchActions();
-	for(auto& A: actionsList)
+	for(auto& A: actionsList) {
 		if(A.type == "SL" || A.type == "DS" || A.type == "SD")
 			out += QString("\tunsigned long long ") + A.variable + QString("Start = 0;\n");
-
+		if(A.type == "SL" || A.type == "DS" || A.type == "SD" || A.type == "S")
+			out += QString("\tbool ") + A.variable + QString("Set = 0;\n");
+	}
 
 	return out;
 }
@@ -81,7 +83,7 @@ QString SFCConverter::outputAnalysisDef() {
 			}
 			out += QString(") ") + A.variable + QString(" = 0;\n");
 		}
-		if(A.type == "P") {
+		/*if(A.type == "P") {
 			out += QString("\tif(newStep != oldStep && (");
 			for(auto& S: A.steps) {
 				out += QString("newStep == ") + S;
@@ -121,6 +123,9 @@ QString SFCConverter::outputAnalysisDef() {
 			out += QString("\t}\n");
 			out += QString("\tif((Timer::milliseconds() - ") + A.variable + QString("Start) > ") + A.time + QString(") ") + A.variable + QString(" = 0;\n");
 		}
+		if(A.type == "SD") {}
+		if(A.type == "DS") {}
+		 */
 	}
 	out += QString("\toldStep = newStep;\n");
 	out += QString("}\n");
