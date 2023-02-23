@@ -71,6 +71,7 @@ Thumbs.db
 # --------
 build-debug/*
 build-release/*
+windows-deploy/*
 *.dll
 *.exe
 
