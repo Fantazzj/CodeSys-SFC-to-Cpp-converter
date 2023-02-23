@@ -52,6 +52,7 @@ void Converter::_convertPou() {
 			<< sfcConverter.autoCycleDec()
 			<< sfcConverter.outputAnalysisDec()
 			<< publicVars
+			<< "\tStep newStep;\n"
 			<< "private:\n"
 			<< sfcConverter.privateVars()
 			<< sfcConverter.changeStepDec()
