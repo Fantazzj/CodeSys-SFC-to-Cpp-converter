@@ -55,6 +55,13 @@ QString SFCConverter::outputAnalysisDef() {
 
 	QVector<Action> actionsList = _searchActions();
 
+	_sortActionsByQualifier(&actionsList);
+
+	for(auto& A: actionsList) {
+		qDebug() << A.variable;
+		qDebug() << A.type;
+	}
+
 	out += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
 	for(auto& A: actionsList) {
 		if(A.type == "N") {
@@ -323,8 +330,12 @@ QVector<QString> SFCConverter::_searchStepsNames() {
 	return stepsList;
 }
 
-void SFCConverter::_sortActions(QVector<Action>) {
-	
+void SFCConverter::_sortActionsByQualifier(QVector<Action>* actionsList) {
+	std::sort(actionsList->begin(), actionsList->end(),
+			  [](const Action& x, const Action& y) {
+				  if(x.type.contains('S')) return true;
+				  else return false;
+			  });
 }
 
 QString SFCConverter::classDefinition() {
