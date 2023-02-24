@@ -30,6 +30,7 @@ public:
 	QString actual;
 	QString next;
 	QString transition;
+	bool initial = false;
 };
 
 class SFCConverter : public GeneralConverter {
@@ -45,6 +46,7 @@ private:
 public:
 	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir, QString pouName);
 	QString enumStates();
+	QString classDefinition();
 	QString autoCycleDef();
 	QString autoCycleDec();
 	QString outputAnalysisDef();

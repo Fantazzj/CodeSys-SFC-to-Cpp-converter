@@ -165,19 +165,24 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 	QVector<Step> stepsList;
 	Step newStep;
 	SFC last;
-	QString lastStep;
+	QString lastStepName;
+	bool lastStepInitial = false;
 	QVector<QString> divStep;
 	QVector<QString> convStep;
 	QVector<QString> stepsNames = _searchStepsNames();
 
 	while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
-		_xml->readNext();
+		_xml->readNextStartElement();
 
 		if(_isElement("step")) {
-			lastStep = _getAttribute("name");
-			if(_getAttribute("initialStep") != "true") {
-				newStep.next = lastStep;
+			lastStepName = _getAttribute("name");
+			if(_getAttribute("initialStep") == "true") {
+				lastStepInitial = true;
+			} else {
+				newStep.next = lastStepName;
+				newStep.initial = lastStepInitial;
 				stepsList.append(newStep);
+				lastStepInitial = false;
 			}
 			last = StepEl;
 		}
@@ -200,7 +205,8 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 				newStep.actual = divStep.last();
 				newStep.transition = condition;
 			} else {
-				newStep.actual = lastStep;
+				newStep.actual = lastStepName;
+				newStep.initial = lastStepInitial;
 				newStep.transition = condition;
 			}
 
@@ -215,7 +221,7 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 		}
 
 		else if(_isElement("selectionDivergence")) {
-			divStep.append(lastStep);
+			divStep.append(lastStepName);
 			convStep.append(_searchAfterConv());
 			last = Divergence;
 		}
@@ -319,4 +325,21 @@ QVector<QString> SFCConverter::_searchStepsNames() {
 
 void SFCConverter::_sortActions(QVector<Action>) {
 	
+}
+
+QString SFCConverter::classDefinition() {
+	QString out;
+
+	out += _pouName + QString("::") + _pouName + QString("(){\n");
+
+	QVector<Step> stepList;
+	stepList = _searchStepsInfo();
+
+	for(auto& S: stepList)
+		if(S.initial)
+			out += QString("\tnewStep = ") + S.actual + QString(";\n");
+
+	out += QString("}\n");
+
+	return out;
 }
