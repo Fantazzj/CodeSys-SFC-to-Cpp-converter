@@ -40,6 +40,7 @@ private:
 	QVector<Step> _searchStepsInfo();
 	QVector<QString> _searchStepsNames();
 	QVector<Action> _searchActions();
+	void _sortActions(QVector<Action>);
 
 public:
 	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir, QString pouName);

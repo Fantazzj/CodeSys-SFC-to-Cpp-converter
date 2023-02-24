@@ -316,3 +316,7 @@ QVector<QString> SFCConverter::_searchStepsNames() {
 
 	return stepsList;
 }
+
+void SFCConverter::_sortActions(QVector<Action>) {
+	
+}
