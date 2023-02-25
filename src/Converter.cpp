@@ -1,7 +1,9 @@
 #include "Converter.hpp"
 
 Converter::Converter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir) :
-	GeneralConverter(xml, xmlFile, outDir) {}
+	GeneralConverter(xml, xmlFile) {
+	_outDir = outDir;
+}
 
 void Converter::exec() {
 	_createTimerClass();
@@ -37,14 +39,14 @@ void Converter::_convertPou() {
 		<< "\n"
 		<< Qt::flush;
 
-	VarsConverter varsConverter = VarsConverter(_xml, _xmlFile, _outDir);
+	VarsConverter varsConverter = VarsConverter(_xml, _xmlFile);
 	QString publicVars = varsConverter.publicVars();
 
 	_reachElement("body");
 	_xml->readNextStartElement();
 
 	if(_xml->name() == QString("SFC")) {
-		SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, _outDir, pouName);
+		SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, pouName);
 
 		hpp << sfcConverter.enumStates()
 			<< "class " << pouName << " {\n"

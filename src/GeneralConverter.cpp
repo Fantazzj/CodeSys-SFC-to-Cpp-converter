@@ -1,10 +1,9 @@
 #include "GeneralConverter.hpp"
 
-GeneralConverter::GeneralConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir) {
+GeneralConverter::GeneralConverter(QXmlStreamReader* xml, QFile* xmlFile) {
 	_xml = xml;
 	_xmlFile = xmlFile;
 	_startLine = xml->lineNumber();
-	_outDir = outDir;
 }
 
 void GeneralConverter::_reachElement(QString name, QXmlStreamReader::TokenType tokenType) {

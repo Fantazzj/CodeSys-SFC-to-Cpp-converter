@@ -44,7 +44,7 @@ private:
 	void _sortActionsByQualifier(QVector<Action>* actionsList);
 
 public:
-	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir, QString pouName);
+	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName);
 	QString enumStates();
 	QString classDefinition();
 	QString autoCycleDef();

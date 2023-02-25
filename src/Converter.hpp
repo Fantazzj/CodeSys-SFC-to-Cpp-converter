@@ -10,6 +10,7 @@
 
 class Converter : public GeneralConverter {
 private:
+	QDir _outDir;
 	void _convertPou();
 	void _createTimerClass();
 

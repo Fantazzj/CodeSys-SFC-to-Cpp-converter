@@ -1,7 +1,7 @@
 #include "VarsConverter.hpp"
 
-VarsConverter::VarsConverter(QXmlStreamReader* xml, QFile* xmlFile, QDir outDir) :
-	GeneralConverter(xml, xmlFile, outDir) {}
+VarsConverter::VarsConverter(QXmlStreamReader* xml, QFile* xmlFile) :
+	GeneralConverter(xml, xmlFile) {}
 
 QVector<Variable> VarsConverter::_searchVariables() {
 	QVector<Variable> variablesList;
