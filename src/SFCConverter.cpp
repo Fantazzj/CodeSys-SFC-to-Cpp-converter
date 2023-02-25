@@ -41,9 +41,9 @@ QString SFCConverter::privateVars() {
 
 	QVector<Action> actionsList = _searchActions();
 	for(auto& A: actionsList) {
-		if(A.type == "SL" || A.type == "DS" || A.type == "SD")
-			out += QString("\tunsigned long long ") + A.variable + QString("Start = 0;\n");
-		if(A.type == "SL" || A.type == "DS" || A.type == "SD" || A.type == "S")
+		if(A.type.contains('D') || A.type.contains('L'))
+			out += QString("\tunsigned long long ") + A.variable + QString("Millis = 0;\n");
+		if(A.type.contains('S'))
 			out += QString("\tbool ") + A.variable + QString("Set = 0;\n");
 	}
 
@@ -62,79 +62,109 @@ QString SFCConverter::outputAnalysisDef() {
 		qDebug() << A.type;
 	}
 
-	out += QString("void ") + _pouName + QString("::outputAnalysis() {\n");
+	out += "void " + _pouName + "::outputAnalysis() {\n";
 	for(auto& A: actionsList) {
 		if(A.type == "N") {
-			out += QString("\tif(");
+			out += "\tif(";
 			for(auto& S: A.steps) {
-				out += QString("newStep == ") + S;
-				if(&S != &A.steps.last()) out += QString(" || ");
+				out += "newStep == " + S;
+				if(&S != &A.steps.last()) out += " || ";
 			}
-			out += QString(") ") + A.variable + QString(" = 1;\n");
-			out += QString("\telse ") + A.variable + QString(" = 0;\n");
+			out += ") " + A.variable + " = 1;\n";
+			out += "\telse " + A.variable + " = 0;\n";
 		}
-		if(A.type == "S") {
-			out += QString("\tif(");
+		else if(A.type == "S") {
+			out += "\tif(";
 			for(auto& S: A.steps) {
-				out += QString("newStep == ") + S;
-				if(&S != &A.steps.last()) out += QString(" || ");
+				out += "newStep == " + S;
+				if(&S != &A.steps.last()) out += " || ";
 			}
-			out += QString(") ") + A.variable + QString(" = 1;\n");
+			out += ") {\n";
+			out += "\t\t" + A.variable + " = 1;\n";
+			out += "\t\t" + A.variable + "Set = 1;\n";
+			out += "\t}\n";
 		}
-		if(A.type == "R") {
-			out += QString("\tif(");
+		else if(A.type == "R") {
+			out += "\tif(";
 			for(auto& S: A.steps) {
-				out += QString("newStep == ") + S;
-				if(&S != &A.steps.last()) out += QString(" || ");
+				out += "newStep == " + S;
+				if(&S != &A.steps.last()) out += " || ";
 			}
-			out += QString(") ") + A.variable + QString(" = 0;\n");
+			out += ") {\n";
+			out += "\t\t" + A.variable + " = 0;\n";
+			out += "\t\t" + A.variable + "Set = 0;\n";
+			out += "\t}\n";
 		}
-		/*if(A.type == "P") {
-			out += QString("\tif(newStep != oldStep && (");
+		else if(A.type == "P") {
+			out += "\tif(newStep != oldStep && (";
 			for(auto& S: A.steps) {
-				out += QString("newStep == ") + S;
-				if(&S != &A.steps.last()) out += QString(" || ");
+				out += "newStep == " + S;
+				if(&S != &A.steps.last()) out += " || ";
 			}
-			out += QString(")) ") + A.variable + QString(" = 1;\n");
-			out += QString("\telse ") + A.variable + QString(" = 0;\n");
+			out += ")) " + A.variable + " = 1;\n";
+			out += "\telse " + A.variable + " = 0;\n";
 		}
-		if(A.type == "D") {
-			out += QString("\tif(elapsedMillis >= ") + A.time + QString(" && (");
+		else if(A.type == "D") {
+			out += "\tif(elapsedMillis >= " + A.time + " && (";
 			for(auto& S: A.steps) {
-				out += QString("newStep == ") + S;
-				if(&S != &A.steps.last()) out += QString(" || ");
+				out += "newStep == " + S;
+				if(&S != &A.steps.last()) out += " || ";
 			}
-			out += QString(")) ") + A.variable + QString(" = 1;\n");
-			out += QString("\telse ") + A.variable + QString(" = 0;\n");
+			out += ")) " + A.variable + " = 1;\n";
+			out += "\telse " + A.variable + " = 0;\n";
 		}
-		if(A.type == "L") {
-			out += QString("\tif(elapsedMillis <= ") + A.time + QString(" && (");
+		else if(A.type == "L") {
+			out += "\tif((";
 			for(auto& S: A.steps) {
-				out += QString("newStep == ") + S;
-				if(&S != &A.steps.last()) out += QString(" || ");
+				out += "newStep == " + S;
+				if(&S != &A.steps.last()) out += " || ";
 			}
-			out += QString(")) ") + A.variable + QString(" = 1;\n");
-			out += QString("\telse ") + A.variable + QString(" = 0;\n");
+			out += ") && elapsedMillis <= " + A.time + ") " + A.variable + " = 1;\n";
+			out += "\telse " + A.variable + " = 0;\n";
 		}
-		if(A.type == "SL") {
-			out += QString("\tif(");
+		else if(A.type == "SL") {
+			out += "\tif((";
 			for(auto& S: A.steps) {
-				out += QString("newStep == ") + S;
-				if(&S != &A.steps.last()) out += QString(" || ");
+				out += "newStep == " + S;
+				if(&S != &A.steps.last()) out += " || ";
 			}
-			out += QString(") ") + A.variable + QString(" = 1;\n");
-			out += QString("\tif((") + A.variable + QString("Start + elapsedMillis) > ") + A.time + QString(") {\n");
-			out += QString("\t\t") + A.variable + QString(" = 0;\n");
-			out += QString("\t\t") + A.variable + QString("Start = Timer::milliseconds();\n");
-			out += QString("\t}\n");
-			out += QString("\tif((Timer::milliseconds() - ") + A.variable + QString("Start) > ") + A.time + QString(") ") + A.variable + QString(" = 0;\n");
+			out += ") && !" + A.variable + "Set) {\n";
+			out += "\t\t" + A.variable + " = 1;\n";
+			out += "\t\t" + A.variable + "Set = 1;\n";
+			out += "\t\t" + A.variable + "Millis = Timer::milliseconds();\n";
+			out += "\t}\n";
+			out += "\telse if((Timer::milliseconds() - " + A.variable + "Millis) > " + A.time + ") {\n";
+			out += "\t\t" + A.variable + " = " + A.variable + "Set;\n";
+			out += "\t}\n";
 		}
-		if(A.type == "SD") {}
-		if(A.type == "DS") {}
-		 */
+		else if(A.type == "SD") {
+			out += "\tif((";
+			for(auto& S: A.steps) {
+				out += "newStep == " + S;
+				if(&S != &A.steps.last()) out += " || ";
+			}
+			out += ") && !" + A.variable + "Set) {\n";
+			out += "\t\t" + A.variable + "Set = 1;\n";
+			out += "\t\t" + A.variable + "Millis = Timer::milliseconds();\n";
+			out += "\t}\n";
+			out += "\telse if((Timer::milliseconds() - " + A.variable + "Millis) > " + A.time + ") {\n";
+			out += "\t\t" + A.variable + " = " + A.variable + "Set;\n";
+			out += "\t}\n";
+		}
+		else if(A.type == "DS") {
+			out += "\tif((";
+			for(auto& S: A.steps) {
+				out += "newStep == " + S;
+				if(&S != &A.steps.last()) out += " || ";
+			}
+			out += ") && elapsedMillis >= " + A.time + ") {\n";
+			out += "\t\t" + A.variable + "Set = 1;\n";
+			out += "\t\t" + A.variable + " = 1;\n";
+			out += "\t}\n";
+		}
 	}
-	out += QString("\toldStep = newStep;\n");
-	out += QString("}\n");
+	out += "\toldStep = newStep;\n";
+	out += "}\n";
 
 	return out;
 }
@@ -185,7 +215,8 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 			lastStepName = _getAttribute("name");
 			if(_getAttribute("initialStep") == "true") {
 				lastStepInitial = true;
-			} else {
+			}
+			else {
 				newStep.next = lastStepName;
 				newStep.initial = lastStepInitial;
 				stepsList.append(newStep);
@@ -208,10 +239,12 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 				stepsList.append(newStep);
 				newStep.actual = divStep.last();
 				newStep.transition = condition;
-			} else if(last == Jump) {
+			}
+			else if(last == Jump) {
 				newStep.actual = divStep.last();
 				newStep.transition = condition;
-			} else {
+			}
+			else {
 				newStep.actual = lastStepName;
 				newStep.initial = lastStepInitial;
 				newStep.transition = condition;
