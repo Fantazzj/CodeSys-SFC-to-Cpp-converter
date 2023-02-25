@@ -13,7 +13,7 @@ QVector<Variable> VarsConverter::_searchVariables() {
 
 		if(_isElement("variable")) {
 			if(last == Type) {
-				newVariable.init = QString("");
+				newVariable.init = "";
 				variablesList.append(newVariable);
 			}
 			newVariable.name = _getAttribute("name");
@@ -32,7 +32,7 @@ QVector<Variable> VarsConverter::_searchVariables() {
 	}
 
 	if(last == Type) {
-		newVariable.init = QString("");
+		newVariable.init = "";
 		variablesList.append(newVariable);
 	}
 
@@ -45,11 +45,11 @@ QString VarsConverter::publicVars() {
 	QString out;
 	QVector<Variable> variableList = _searchVariables();
 	for(auto& V: variableList) {
-		if(V.type == QString("TIME")) _convertTime(&V.init);
+		if(V.type == "TIME") _convertTime(&V.init);
 		_convertType(&V.type);
-		out += QString("\t") + V.type + QString(" ") + V.name;
-		if(!V.init.isEmpty()) out += QString(" = ") + V.init;
-		out += QString(";\n");
+		out += "\t" + V.type + " " + V.name;
+		if(!V.init.isEmpty()) out += " = " + V.init;
+		out += ";\n";
 	}
 	return out;
 }
