@@ -380,8 +380,10 @@ QString SFCConverter::classDefinition() {
 	stepList = _searchStepsInfo();
 
 	for(auto& S: stepList)
-		if(S.initial)
-			out += QString("\tnewStep = ") + S.actual + QString(";\n");
+		if(S.initial) {
+			out += "\tnewStep = " + S.actual + ";\n";
+			break;
+		}
 
 	out += QString("}\n");
 
