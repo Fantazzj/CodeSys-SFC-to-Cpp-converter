@@ -43,7 +43,7 @@ QString SFCConverter::privateVars() {
 		if(A.type.contains('D') || A.type.contains('L'))
 			out += "\tunsigned long long " + A.variable + "Millis = 0;\n";
 		if(A.type.contains('S'))
-			out +="\tbool " + A.variable + "Set = 0;\n";
+			out += "\tbool " + A.variable + "Set = 0;\n";
 	}
 
 	return out;
@@ -76,7 +76,10 @@ QString SFCConverter::outputAnalysisDef() {
 				if(&S != &A.steps.last()) out += " || ";
 			}
 			out += ") " + A.variable + " = 1;\n";
-			out += "\telse " + A.variable + " = 0;\n";
+			if(_existsQualifierGen("S", A.variable))
+				out += "\telse " + A.variable + "Set = 0;\n";
+			else
+				out += "\telse " + A.variable + " = 0;\n";
 		}
 		else if(A.type == "S") {
 			out += "\tif(";
@@ -107,7 +110,10 @@ QString SFCConverter::outputAnalysisDef() {
 				if(&S != &A.steps.last()) out += " || ";
 			}
 			out += ")) " + A.variable + " = 1;\n";
-			out += "\telse " + A.variable + " = 0;\n";
+			if(_existsQualifierGen("S", A.variable))
+				out += "\telse " + A.variable + "Set = 0;\n";
+			else
+				out += "\telse " + A.variable + " = 0;\n";
 		}
 		else if(A.type == "D") {
 			out += "\tif(elapsedMillis >= " + A.time + " && (";
@@ -116,7 +122,10 @@ QString SFCConverter::outputAnalysisDef() {
 				if(&S != &A.steps.last()) out += " || ";
 			}
 			out += ")) " + A.variable + " = 1;\n";
-			out += "\telse " + A.variable + " = 0;\n";
+			if(_existsQualifierGen("S", A.variable))
+				out += "\telse " + A.variable + "Set = 0;\n";
+			else
+				out += "\telse " + A.variable + " = 0;\n";
 		}
 		else if(A.type == "L") {
 			out += "\tif((";
@@ -125,7 +134,10 @@ QString SFCConverter::outputAnalysisDef() {
 				if(&S != &A.steps.last()) out += " || ";
 			}
 			out += ") && elapsedMillis <= " + A.time + ") " + A.variable + " = 1;\n";
-			out += "\telse " + A.variable + " = 0;\n";
+			if(_existsQualifierGen("S", A.variable))
+				out += "\telse " + A.variable + "Set = 0;\n";
+			else
+				out += "\telse " + A.variable + " = 0;\n";
 		}
 		else if(A.type == "SL") {
 			out += "\tif((";
@@ -133,9 +145,8 @@ QString SFCConverter::outputAnalysisDef() {
 				out += "newStep == " + S;
 				if(&S != &A.steps.last()) out += " || ";
 			}
-			out += ") && !" + A.variable + "Set) {\n";
+			out += ") && newStep!=oldStep) {\n";
 			out += "\t\t" + A.variable + " = 1;\n";
-			out += "\t\t" + A.variable + "Set = 1;\n";
 			out += "\t\t" + A.variable + "Millis = Timer::milliseconds();\n";
 			out += "\t}\n";
 			out += "\telse if((Timer::milliseconds() - " + A.variable + "Millis) > " + A.time + ") {\n";
