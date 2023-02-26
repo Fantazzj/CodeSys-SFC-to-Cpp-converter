@@ -36,7 +36,6 @@ QString SFCConverter::autoCycleDef() {
 QString SFCConverter::privateVars() {
 	QString out;
 	out += "\tStep oldStep;\n";
-	out += "\tunsigned long long elapsedMillis = 0;\n";
 	out += "\tunsigned long long previousMillis = 0;\n";
 
 	QVector<Action> actionsList = _searchActions();
@@ -54,8 +53,6 @@ QString SFCConverter::outputAnalysisDef() {
 	QString out;
 
 	QVector<Action> actionsList = _searchActions();
-
-	_sortActionsByQualifier(&actionsList);
 
 #ifndef QT_NO_DEBUG_OUTPUT
 	qDebug() << "sorted actions:";
@@ -383,17 +380,47 @@ QString SFCConverter::classDefinition() {
 	QString out;
 
 	out += _pouName + "::" + _pouName + "(){\n";
-
-	QVector<Step> stepList;
-	stepList = _searchStepsInfo();
-
-	for(auto& S: stepList)
-		if(S.initial) {
-			out += "\tnewStep = " + S.actual + ";\n";
-			break;
-		}
-
 	out += "}\n";
 
 	return out;
+}
+
+Step SFCConverter::_searchInitialStep() {
+	Step dummy;
+	QVector<Step> stepsList = _searchStepsInfo();
+
+	for(auto& S: stepsList) {
+		if(S.initial) return S;
+	}
+
+	return dummy;
+}
+
+QString SFCConverter::publicVars() {
+	QString out;
+
+	out += "\tStep newStep = " + _searchInitialStep().actual + ";\n";
+	out += "\tunsigned long long elapsedMillis = 0;\n";
+
+	return out;
+}
+
+bool SFCConverter::_existsQualifierGen(QString qualifier, QString variable) {
+	QVector<Action> actionsList = _searchActions();
+
+	for(auto& A: actionsList)
+		if(A.type.contains(qualifier) && A.variable == variable)
+			return true;
+
+	return false;
+}
+
+bool SFCConverter::_existsQualifierExc(QString qualifier, QString variable) {
+	QVector<Action> actionsList = _searchActions();
+
+	for(auto& A: actionsList)
+		if(A.type == qualifier && A.variable == variable)
+			return true;
+
+	return false;
 }

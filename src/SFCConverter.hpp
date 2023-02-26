@@ -39,9 +39,12 @@ private:
 	QString _reachCondition();
 	QString _searchAfterConv();
 	QVector<Step> _searchStepsInfo();
+	Step _searchInitialStep();
 	QVector<QString> _searchStepsNames();
 	QVector<Action> _searchActions();
 	void _sortActionsByQualifier(QVector<Action>* actionsList);
+	bool _existsQualifierGen(QString qualifier, QString variable);
+	bool _existsQualifierExc(QString qualifier, QString variable);
 
 public:
 	SFCConverter(QXmlStreamReader* xml, QFile* xmlFile, QString pouName);
@@ -54,6 +57,7 @@ public:
 	QString changeStepDef();
 	QString changeStepDec();
 	QString privateVars();
+	QString publicVars();
 };
 
 #endif//CODESYS_SFC_TO_CPP_CONVERTER_SFCCONVERTER_HPP
