@@ -57,13 +57,21 @@ QString SFCConverter::outputAnalysisDef() {
 
 	_sortActionsByQualifier(&actionsList);
 
+#ifndef QT_NO_DEBUG_OUTPUT
+	qDebug() << "sorted actions:";
+	qDebug() << "-----";
 	for(auto& A: actionsList) {
 		qDebug() << A.variable;
 		qDebug() << A.type;
 	}
+	qDebug() << "-----";
+#endif
 
 	out += "void " + _pouName + "::outputAnalysis() {\n";
 	for(auto& A: actionsList) {
+#ifndef QT_NO_DEBUG_OUTPUT
+		out += "\t//" + A.type + "\n";
+#endif
 		if(A.type == "N") {
 			out += "\tif(";
 			for(auto& S: A.steps) {
