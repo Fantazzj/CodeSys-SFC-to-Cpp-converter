@@ -19,7 +19,11 @@ void Converter::exec() {
 		qInfo() << "converting...";
 		qInfo() << "-----";
 		_convertPou();
-	} while((_isElement("body", QXmlStreamReader::EndElement)) && !_xml->isEndDocument());
+		qInfo() << "...done converting";
+		qInfo() << "-----";
+		_reachElement("pou", QXmlStreamReader::EndElement);
+		_xml->readNextStartElement();
+	} while(_isElement("pou") && !_xml->isEndDocument());
 }
 
 void Converter::_convertPou() {
