@@ -9,22 +9,27 @@ void Converter::exec() {
 	_createTimerClass();
 
 	_reachElement("pous");
+	qInfo() << "reached \"pous\"";
+	qInfo() << "-----";
 
 	do {
 		_reachElement("pou");
+		qInfo() << "reached \"pou\"";
+		qInfo() << "-----";
+		qInfo() << "converting...";
+		qInfo() << "-----";
 		_convertPou();
-	} while((_xml->name() == QString("body") && _xml->isEndElement()) &&
-			!_xml->isEndDocument());
+	} while((_isElement("body", QXmlStreamReader::EndElement)) && !_xml->isEndDocument());
 }
 
 void Converter::_convertPou() {
 	QString pouName = _getAttribute("name");
 
-	QFile cppFile = QFile(_outDir.dirName() + QString("/") + pouName + QString(".cpp"));
+	QFile cppFile = QFile(_outDir.dirName() + "/" + pouName + ".cpp");
 	cppFile.open(QIODevice::WriteOnly | QIODevice::Text);
 	QTextStream cpp = QTextStream(&cppFile);
 
-	QFile hppFile = QFile(_outDir.dirName() + QString("/") + pouName + QString(".hpp"));
+	QFile hppFile = QFile(_outDir.dirName() + "/" + pouName + ".hpp");
 	hppFile.open(QIODevice::WriteOnly | QIODevice::Text);
 	QTextStream hpp = QTextStream(&hppFile);
 
@@ -39,13 +44,23 @@ void Converter::_convertPou() {
 		<< "\n"
 		<< Qt::flush;
 
+	_reachElement("interface");
+	qInfo() << "reached \"interface\"";
+	qInfo() << "-----";
+
+	_reachElement("localVars");
+	qInfo() << "reached \"localVars\"";
+	qInfo() << "-----";
 	VarsConverter varsConverter = VarsConverter(_xml, _xmlFile);
-	QString publicVars = varsConverter.publicVars();
 
 	_reachElement("body");
+	qInfo() << "reached \"body\"";
+	qInfo() << "-----";
 	_xml->readNextStartElement();
 
-	if(_xml->name() == QString("SFC")) {
+	if(_isElement("SFC")) {
+		qInfo() << "found \"SFC\" program";
+		qInfo() << "-----";
 		SFCConverter sfcConverter = SFCConverter(_xml, _xmlFile, pouName);
 
 		hpp << sfcConverter.enumStates()
@@ -54,7 +69,7 @@ void Converter::_convertPou() {
 			<< "\t" << pouName << "();\n"
 			<< sfcConverter.autoCycleDec()
 			<< sfcConverter.outputAnalysisDec()
-			<< publicVars
+			<< varsConverter.publicVars()
 			<< sfcConverter.publicVars()
 			<< "private:\n"
 			<< sfcConverter.privateVars()
@@ -102,10 +117,13 @@ void Converter::_createTimerClass() {
 	cpp << "#include \"Timer.hpp\"\n"
 		<< "void Timer::wait(unsigned long long t) {\n"
 		<< "\t//insert function to block the execution\n"
+		<< "\t//delay(t);\n"
 		<< "}\n"
 		<< "unsigned long long Timer::milliseconds() {\n"
-		<< "\t//insert function to return milliseconds\n"
-		<< "\treturn 0;\n"
+		<< "\tunsigned long long milliseconds = 0;\n"
+		<< "\t//insert function to return milliseconds from startup\n"
+		<< "\t//milliseconds = millis();\n"
+		<< "\treturn milliseconds;\n"
 		<< "}\n"
 		<< Qt::flush;
 

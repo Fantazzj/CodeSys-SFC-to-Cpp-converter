@@ -16,6 +16,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_compile_definitions(QT_NO_DEBUG_OUTPUT)
+    add_compile_definitions(QT_NO_INFO_OUTPUT)
 endif()
 
 add_executable(CodeSys-SFC-to-Cpp-converter
