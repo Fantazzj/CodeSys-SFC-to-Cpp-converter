@@ -72,5 +72,5 @@ void GeneralConverter::_convertType(QString* type) {
 	type->replace("INT", "int");
 	type->replace("WORD", "int");
 	type->replace("DWORD", "int");
-	type->replace("TIME", "unsigned long long");
+	type->replace("TIME", "unsigned long");
 }

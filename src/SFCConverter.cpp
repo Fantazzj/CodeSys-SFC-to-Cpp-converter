@@ -36,12 +36,12 @@ QString SFCConverter::autoCycleDef() {
 QString SFCConverter::privateVars() {
 	QString out;
 	out += "\tStep oldStep;\n";
-	out += "\tunsigned long long previousMillis = 0;\n";
+	out += "\tunsigned long previousMillis = 0;\n";
 
 	QVector<Action> actionsList = _searchActions();
 	for(auto& A: actionsList) {
 		if(A.type.contains('D') || A.type.contains('L'))
-			out += "\tunsigned long long " + A.variable + "Millis = 0;\n";
+			out += "\tunsigned long " + A.variable + "Millis = 0;\n";
 		if(A.type.contains('S'))
 			out += "\tbool " + A.variable + "Set = 0;\n";
 	}
@@ -417,7 +417,7 @@ QString SFCConverter::publicVars() {
 	QString out;
 
 	out += "\tStep newStep = " + _searchInitialStep().actual + ";\n";
-	out += "\tunsigned long long elapsedMillis = 0;\n";
+	out += "\tunsigned long elapsedMillis = 0;\n";
 
 	return out;
 }
