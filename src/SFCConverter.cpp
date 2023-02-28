@@ -224,6 +224,8 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 	QVector<QString> convStep;
 	QVector<QString> stepsNames = _searchStepsNames();
 
+	_backToLine(_startLine);
+
 	while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
 		_xml->readNextStartElement();
 
@@ -298,6 +300,8 @@ QVector<Action> SFCConverter::_searchActions() {
 	QVector<Action> actionsList;
 	QString lastStep;
 
+	_backToLine(_startLine);
+
 	while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
 		_xml->readNextStartElement();
 
@@ -367,6 +371,8 @@ QString SFCConverter::changeStepDef() {
 
 QVector<QString> SFCConverter::_searchStepsNames() {
 	QVector<QString> stepsList;
+
+	_backToLine(_startLine);
 
 	while(!_isElement("SFC", QXmlStreamReader::EndElement)) {
 		_xml->readNext();

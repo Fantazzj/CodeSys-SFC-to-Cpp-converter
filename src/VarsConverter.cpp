@@ -8,6 +8,8 @@ QVector<Variable> VarsConverter::_searchVariables() {
 	Variable newVariable;
 	VarEl last;
 
+	_backToLine(_startLine);
+
 	while(!_isElement("localVars", QXmlStreamReader::EndElement)) {
 		_xml->readNextStartElement();
 
