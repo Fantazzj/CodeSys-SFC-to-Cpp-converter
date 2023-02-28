@@ -92,6 +92,8 @@ void Converter::_convertPou() {
 	hpp << "#endif\n"
 		<< Qt::flush;
 
+	_reachElement("SFC", QXmlStreamReader::EndElement);
+
 	cppFile.close();
 	hppFile.close();
 }
