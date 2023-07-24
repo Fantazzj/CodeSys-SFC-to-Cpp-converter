@@ -69,9 +69,9 @@ Thumbs.db
 
 # Binaries
 # --------
-build-debug/*
-build-release/*
-windows-deploy/*
+cmake-build-debug/*
+cmake-build-release/*
+cmake-install-release/*
 *.dll
 *.exe
 
