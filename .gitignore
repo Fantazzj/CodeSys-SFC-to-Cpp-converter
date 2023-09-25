@@ -82,3 +82,6 @@ cmake-install-release/*
 *.~u
 *.precompilecache
 *.opt
+
+# Testing
+arduinoTesting/*

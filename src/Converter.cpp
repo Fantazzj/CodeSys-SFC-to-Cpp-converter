@@ -88,6 +88,7 @@ void Converter::_convertPou() {
 			<< sfcConverter.changeStepDef()
 			<< Qt::flush;
 	}
+	//add here other languages like ST or LD
 
 	hpp << "#endif\n"
 		<< Qt::flush;
@@ -110,11 +111,9 @@ void Converter::_createTimerClass() {
 	hpp << "#ifndef TIMER_HPP\n"
 		<< "#define TIMER_HPP\n"
 		<< "\n"
-		<< "class Timer {\n"
-		<< "public:\n"
-		<< "\tTimer() = default;\n"
-		<< "\tstatic void wait(unsigned long t);\n"
-		<< "\tstatic unsigned long milliseconds();\n"
+		<< "namespace Timer {\n"
+		<< "\tvoid wait(unsigned long t);\n"
+		<< "\tunsigned long milliseconds();\n"
 		<< "};\n"
 		<< "\n"
 		<< "#endif\n"
@@ -123,11 +122,14 @@ void Converter::_createTimerClass() {
 	cpp << "#include \"Timer.hpp\"\n"
 		<< "void Timer::wait(unsigned long t) {\n"
 		<< "\t//insert function to block the execution\n"
+		<< "\t//for arduino is\n"
 		<< "\t//delay(t);\n"
+		<< "\t//for Qt is QThread::msleep(t);\n"
 		<< "}\n"
 		<< "unsigned long Timer::milliseconds() {\n"
 		<< "\tunsigned long milliseconds = 0;\n"
 		<< "\t//insert function to return milliseconds from startup\n"
+		<< "\t//for arduino is\n"
 		<< "\t//milliseconds = millis();\n"
 		<< "\treturn milliseconds;\n"
 		<< "}\n"
