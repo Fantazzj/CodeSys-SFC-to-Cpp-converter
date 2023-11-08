@@ -247,7 +247,7 @@ QVector<Step> SFCConverter::_searchStepsInfo() {
 			QString condition = _reachCondition();
 			condition.replace("and", "&&");
 			condition.replace("or", "||");
-			condition.replace("not ", "!");
+			condition.replace("not", "!");
 			_convertTime(&condition);
 			for(auto& S: stepsNames)
 				condition.replace(S + ".t", "elapsedMillis");
