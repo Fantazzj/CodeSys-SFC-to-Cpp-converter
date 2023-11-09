@@ -70,17 +70,19 @@ QStringList GeneralConverter::_convertTime(QString* time) {
 void GeneralConverter::_convertType(QString* type) {
 	type->replace("BOOL", "bool");
 	type->replace("BYTE", "unsigned short");
-	type->replace("INT", "signed int");
-	type->replace("UINT", "unsigned int");
-	type->replace("SINT", "signed short");
-	type->replace("USINT", "unsigned short");
-	type->replace("DINT", "signed long");
-	type->replace("WORD", "unsigned int");
-	type->replace("DWORD", "unsigned long");
 	type->replace("TIME", "unsigned long");
 	type->replace("REAL", "float");
-	type->replace("LWORD", "unsigned long long");
+
+	type->replace("USINT", "unsigned short");
 	type->replace("UDINT", "unsigned long");
-	type->replace("LINT", "signed long long");
 	type->replace("ULINT", "unsigned long long");
+	type->replace("SINT", "signed short");
+	type->replace("UINT", "unsigned int");
+	type->replace("DINT", "signed long");
+	type->replace("LINT", "signed long long");
+	type->replace("INT", "signed int");
+
+	type->replace("LWORD", "unsigned long long");
+	type->replace("DWORD", "unsigned long");
+	type->replace("WORD", "unsigned int");
 }
